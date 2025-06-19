@@ -126,7 +126,8 @@ source $ZSH/oh-my-zsh.sh
 # -------------------------------------------------------------------
 
 # Define the path to your custom Zsh config directory (symlinked from ~/.zsh-config)
-ZSH_CUSTOM_CONFIG_DIR="${HOME}/zsh-config"
+# ZSH_CUSTOM_CONFIG_DIR="${HOME}/zsh-config"
+ZSH_CUSTOM_CONFIG_DIR="${HOME}/.config/zsh" # new change
 
 # --- Load environment variables first (if moved to a subdirectory) ---
 # This step is important if you moved environment.zsh to a dedicated 'environment' folder.
