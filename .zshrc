@@ -121,7 +121,64 @@ source $ZSH/oh-my-zsh.sh
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# Load all personal Zsh config files from a dedicated directory
-for config_file in ~/zsh-config/*.zsh; do
-  source "$config_file"
-done
+# -------------------------------------------------------------------
+#   Load Custom Configurations
+# -------------------------------------------------------------------
+
+# Define the path to your custom Zsh config directory (symlinked from ~/.zsh-config)
+ZSH_CUSTOM_CONFIG_DIR="${HOME}/zsh-config"
+
+# --- Load environment variables first (if moved to a subdirectory) ---
+# This step is important if you moved environment.zsh to a dedicated 'environment' folder.
+# If environment.zsh is still at the root of zsh-config, this block can be removed or adapted.
+if [ -d "$ZSH_CUSTOM_CONFIG_DIR/environment" ]; then
+  for env_file in "$ZSH_CUSTOM_CONFIG_DIR"/environment/*.zsh; do
+    if [ -r "$env_file" ]; then
+      source "$env_file"
+    fi
+  done
+  unset env_file
+fi
+
+# --- Load functions ---
+# Check if the functions directory exists
+if [ -d "$ZSH_CUSTOM_CONFIG_DIR/functions" ]; then
+  # Loop through all files in the 'functions' directory that end with .zsh
+  for func_file in "$ZSH_CUSTOM_CONFIG_DIR"/functions/*.zsh; do
+    # Source the file if it exists and is readable
+    if [ -r "$func_file" ]; then
+      source "$func_file"
+    fi
+  done
+  # Unset the variable
+  unset func_file
+fi
+
+# --- Load aliases ---
+# Check if the aliases directory exists before trying to loop
+if [ -d "$ZSH_CUSTOM_CONFIG_DIR/aliases" ]; then
+  # Loop through all files in the 'aliases' directory that end with .zsh
+  for alias_file in "$ZSH_CUSTOM_CONFIG_DIR"/aliases/*.zsh; do
+    # Source the file if it exists and is readable
+    if [ -r "$alias_file" ]; then
+      source "$alias_file"
+    fi
+  done
+  # Unset the variable to keep the shell environment clean
+  unset alias_file
+fi
+
+# --- Load any other root-level .zsh files (like example.zsh if it contains general configs) ---
+# This will source files directly in ~/.zsh-config that are NOT in a subdirectory
+# It's good for general configs that don't fit into aliases/functions/environment
+if [ -d "$ZSH_CUSTOM_CONFIG_DIR" ]; then
+    for misc_file in "$ZSH_CUSTOM_CONFIG_DIR"/*.zsh; do
+        # Exclude files already moved to subdirectories, if they somehow linger or are specific
+        # This is a basic exclusion; you might need more sophisticated checks if paths overlap.
+        # Generally, with a clean move, this isn't strictly necessary for files that *were* moved.
+        if [[ "$misc_file" != */aliases/* && "$misc_file" != */functions/* && "$misc_file" != */environment/* && -r "$misc_file" ]]; then
+            source "$misc_file"
+        fi
+    done
+    unset misc_file
+fi
