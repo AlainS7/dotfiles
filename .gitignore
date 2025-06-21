@@ -1,0 +1,14 @@
+# Ignore problematic config files and circular symlinks
+xdg/.config/.config
+xdg/.config/procps
+xdg/.config/vscode-dev-containers
+
+# Ignore VS Code dev containers globally
+.devcontainer/
+*.code-workspace
+
+# Ignore temporary and cache files
+.DS_Store
+*.tmp
+*.temp
+*~
