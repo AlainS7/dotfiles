@@ -3,6 +3,14 @@
 # =================================================================
 
 # -----------------------------------------------------------------
+# DOTFILES-SPECIFIC ISSUES (Critical fixes)
+# -----------------------------------------------------------------
+# Ignore problematic config files and circular symlinks
+xdg/.config/.config
+xdg/.config/procps
+xdg/.config/vscode-dev-containers
+
+# -----------------------------------------------------------------
 # SENSITIVE FILES (Never commit these!)
 # -----------------------------------------------------------------
 # Environment files with secrets
@@ -96,6 +104,8 @@ NOTES.md
 # -----------------------------------------------------------------
 # IDE/Editor files
 .vscode/settings.json
+.vscode/
+*.code-workspace
 .idea/
 *.sublime-*
 
