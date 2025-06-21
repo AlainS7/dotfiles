@@ -25,7 +25,7 @@ fi
 export ZSH="$HOME/.oh-my-zsh"
 
 # This block now correctly runs AFTER the brew command is available.
-ZSH_CUSTOM_CONFIG_DIR="${HOME}/.config/zsh"
+ZSH_CUSTOM_CONFIG_DIR="${HOME}/Developer/personal/github.com/AlainS7/dotfiles/xdg/.config/zsh"
 # --- Load environment variables first ---
 if [ -d "$ZSH_CUSTOM_CONFIG_DIR/environment" ]; then
   for env_file in "$ZSH_CUSTOM_CONFIG_DIR"/environment/*.zsh; do

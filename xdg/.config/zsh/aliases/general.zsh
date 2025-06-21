@@ -5,8 +5,8 @@
 # -- Shell & Config Management --
 alias reload="source ~/.zshrc"          # Reload your zsh config
 alias zshconfig="code ~/.zshrc"         # Open zsh config in VS Code
-alias aliases="code ~/.config/zsh/aliases/general.zsh"
-alias functions="code ~/.config/zsh/functions/main_functions.zsh"
+alias aliases="code ~/Developer/personal/github.com/AlainS7/dotfiles/xdg/.config/zsh/aliases/general.zsh"
+alias functions="code ~/Developer/personal/github.com/AlainS7/dotfiles/xdg/.config/zsh/functions/main_functions.zsh"
 alias p10kconfig="p10k configure"       # Re-run Powerlevel10k wizard
 
 # Alias to manage dotfiles using a bare repository
