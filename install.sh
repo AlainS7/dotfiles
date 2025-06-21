@@ -164,7 +164,7 @@ install_useful_tools() {
     local tools=(
         "fzf"       # Fuzzy finder
         "bat"       # Better cat with syntax highlighting
-        "exa"       # Better ls
+        "eza"       # Better ls
         "tree"      # Directory tree viewer
         "git"       # Git (ensure latest version)
         "curl"      # HTTP client
