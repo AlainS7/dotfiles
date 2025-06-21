@@ -79,29 +79,35 @@ backup_existing_config() {
 install_homebrew() {
     if ! command -v brew &> /dev/null; then
         print_status "Installing Homebrew..."
+        # Execute the Homebrew installation script
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         
         # --- IMPORTANT: Source Homebrew's environment variables immediately after installation ---
         # This ensures 'brew' command is found by subsequent commands in the script.
-        # Check common Homebrew installation paths.
+        
+        LOCAL_BREW_PATH=""
 
-        # First, try the standard Apple Silicon path
+        # Check common Homebrew installation paths for the executable
         if [ -f "/opt/homebrew/bin/brew" ]; then
-            eval "$(/opt/homebrew/bin/brew shellenv)"
-            echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
-        # Then, try the standard Intel Mac/Linux path
+            LOCAL_BREW_PATH="/opt/homebrew/bin/brew"
         elif [ -f "/usr/local/bin/brew" ]; then
-            eval "$(/usr/local/bin/brew shellenv)"
-            echo 'eval "$(/usr/local/bin/brew shellenv)"' >> ~/.zprofile # For .zprofile if using zsh
-            # For bash users, you might also want to append to ~/.bash_profile or ~/.bashrc
-            # echo 'eval "$(/usr/local/bin/brew shellenv)"' >> ~/.bash_profile 
+            LOCAL_BREW_PATH="/usr/local/bin/brew"
+        elif [ -f "/home/linuxbrew/.linuxbrew/bin/brew" ]; then # <-- This is the path we just found!
+            LOCAL_BREW_PATH="/home/linuxbrew/.linuxbrew/bin/brew"
+        fi
+
+        if [ -n "$LOCAL_BREW_PATH" ]; then # If a path was found
+            eval "$($LOCAL_BREW_PATH shellenv)"
+            # Add to .zprofile for future sessions (adjust if user uses bash and needs .bashrc/.bash_profile)
+            echo "eval \"\$($LOCAL_BREW_PATH shellenv)\"" >> ~/.zprofile
+            print_success "Homebrew installed successfully and PATH updated for current and future sessions."
         else
-            print_error "Homebrew was installed, but 'brew' command not found in expected paths."
-            print_error "Please run 'eval \"$(/your/brew/path/brew shellenv)\"' manually or investigate Homebrew installation."
-            return 1 # Indicate an error in the function
+            print_error "Homebrew was installed, but 'brew' command not found in expected paths after installation."
+            print_error "Checked: /opt/homebrew/bin/brew, /usr/local/bin/brew, /home/linuxbrew/.linuxbrew/bin/brew"
+            print_error "Please manually run 'find / -name brew 2>/dev/null' to locate brew and set up your environment."
+            return 1 # Indicate an error from the function
         fi
         
-        print_success "Homebrew installed successfully and PATH updated"
     else
         print_success "Homebrew already installed"
     fi
