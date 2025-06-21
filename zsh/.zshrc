@@ -5,18 +5,27 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+# =============================================================================
+#   ### THE FINAL FIX - ADDED THIS BLOCK ###
+#   This makes the `brew` command available for the next section to use.
+# =============================================================================
+if [ -f "/opt/homebrew/bin/brew" ]; then # Apple Silicon Macs
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [ -f "/usr/local/bin/brew" ]; then # Intel Macs
+    eval "$(/usr/local/bin/brew shellenv)"
+elif [ -f "/home/linuxbrew/.linuxbrew/bin/brew" ]; then # Linux / Codespaces
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
+# =============================================================================
+
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
-# =============================================================================
-#   ### MOVED FROM THE END OF THE FILE FOR CORRECT LOAD ORDER ###
-#   This block now runs BEFORE Oh My Zsh and its plugins are loaded.
-# =============================================================================
+# This block now correctly runs AFTER the brew command is available.
 ZSH_CUSTOM_CONFIG_DIR="${HOME}/.config/zsh"
-
 # --- Load environment variables first ---
 if [ -d "$ZSH_CUSTOM_CONFIG_DIR/environment" ]; then
   for env_file in "$ZSH_CUSTOM_CONFIG_DIR"/environment/*.zsh; do
@@ -26,7 +35,6 @@ if [ -d "$ZSH_CUSTOM_CONFIG_DIR/environment" ]; then
   done
   unset env_file
 fi
-# =============================================================================
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time Oh My Zsh is loaded, in which case,
@@ -50,7 +58,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Uncomment one of the following lines to change the auto-update behavior
 # zstyle ':omz:update' mode disabled  # disable automatic updates
 # zstyle ':omz:update' mode auto      # update automatically without asking
-# zstyle ':omz:update' mode reminder  # just remind me to update when it's time
+zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 
 # Uncomment the following line to change how often to auto-update (in days).
 # zstyle ':omz:update' frequency 13
