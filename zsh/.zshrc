@@ -11,6 +11,23 @@ fi
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
+# =============================================================================
+#   ### MOVED FROM THE END OF THE FILE FOR CORRECT LOAD ORDER ###
+#   This block now runs BEFORE Oh My Zsh and its plugins are loaded.
+# =============================================================================
+ZSH_CUSTOM_CONFIG_DIR="${HOME}/.config/zsh"
+
+# --- Load environment variables first ---
+if [ -d "$ZSH_CUSTOM_CONFIG_DIR/environment" ]; then
+  for env_file in "$ZSH_CUSTOM_CONFIG_DIR"/environment/*.zsh; do
+    if [ -r "$env_file" ]; then
+      source "$env_file"
+    fi
+  done
+  unset env_file
+fi
+# =============================================================================
+
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time Oh My Zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
@@ -124,22 +141,9 @@ source $ZSH/oh-my-zsh.sh
 # -------------------------------------------------------------------
 #   Load Custom Configurations
 # -------------------------------------------------------------------
-
-# Define the path to your custom Zsh config directory (symlinked from ~/.zsh-config)
-# ZSH_CUSTOM_CONFIG_DIR="${HOME}/zsh-config"
-ZSH_CUSTOM_CONFIG_DIR="${HOME}/.config/zsh" # new change
-
-# --- Load environment variables first (if moved to a subdirectory) ---
-# This step is important if you moved environment.zsh to a dedicated 'environment' folder.
-# If environment.zsh is still at the root of zsh-config, this block can be removed or adapted.
-if [ -d "$ZSH_CUSTOM_CONFIG_DIR/environment" ]; then
-  for env_file in "$ZSH_CUSTOM_CONFIG_DIR"/environment/*.zsh; do
-    if [ -r "$env_file" ]; then
-      source "$env_file"
-    fi
-  done
-  unset env_file
-fi
+# The environment variables block was moved from here to the top.
+# Loading aliases and functions after OMZ is correct.
+# -------------------------------------------------------------------
 
 # --- Load functions ---
 # Check if the functions directory exists
