@@ -63,7 +63,7 @@ for arg in "$@"; do
     shift
     set -- "$@"
     shift
-fi
+done
 
 # --- Backup restore function ---
 restore_backup() {
