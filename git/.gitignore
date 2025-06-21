@@ -133,7 +133,3 @@ $RECYCLE.BIN/
 # ALLOW SPECIFIC FILES (Override above rules)
 # -----------------------------------------------------------------
 # Allow example/template files
-!.env.example
-!.env.template
-!example.*
-!template.*
