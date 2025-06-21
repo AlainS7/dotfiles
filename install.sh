@@ -28,8 +28,88 @@ print_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
+# --- Pre-flight checks for required commands ---
+check_requirements() {
+    local missing=()
+    for cmd in git curl; do
+        if ! command -v "$cmd" &>/dev/null; then
+            missing+=("$cmd")
+        fi
+    done
+    if (( ${#missing[@]} > 0 )); then
+        print_error "Missing required commands: ${missing[*]}"
+        print_error "Please install them and re-run this script."
+        exit 1
+    fi
+}
+
 # --- Script directory ---
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# --- Dry-run mode ---
+DRY_RUN=false
+for arg in "$@"; do
+    if [[ "$arg" == "--dry-run" ]]; then
+        DRY_RUN=true
+        print_status "Running in dry-run mode. No changes will be made."
+    fi
+    if [[ "$arg" == "--restore-backup" ]]; then
+        RESTORE_BACKUP=true
+    fi
+    if [[ "$arg" == "--generate-readme" ]]; then
+        GENERATE_README=true
+    fi
+    # Remove processed args from positional parameters
+    shift
+    set -- "$@"
+    shift
+fi
+
+# --- Backup restore function ---
+restore_backup() {
+    local latest_backup
+    latest_backup=$(ls -dt $HOME/.dotfiles-backup-* 2>/dev/null | head -n1)
+    if [[ -z "$latest_backup" ]]; then
+        print_error "No backup found to restore."
+        return 1
+    fi
+    print_status "Restoring backup from $latest_backup..."
+    cp -r "$latest_backup"/* "$HOME"/
+    print_success "Backup restored."
+}
+
+# --- README.md generator ---
+generate_readme() {
+    cat > "$DOTFILES_DIR/README.md" <<EOF
+# Dotfiles Installer
+
+This repository contains my cross-platform (macOS/Linux) dotfiles and an automated install script.
+
+## Features
+- Safe symlinking of configs (with backup)
+- Homebrew-based package installation
+- Modular Zsh config (aliases, functions, environment)
+- Powerlevel10k, Oh My Zsh, and plugins
+- Global .gitignore setup
+- macOS defaults tweaks
+
+## Usage
+```sh
+./install.sh
+```
+
+- Add `--dry-run` to preview changes without making them.
+- Add `--restore-backup` to restore the most recent backup.
+
+## Customization
+- Edit configs in `xdg/.config/zsh/` for aliases, functions, and environment variables.
+- Add more Homebrew packages in the script as needed.
+
+---
+Generated automatically by the install script.
+EOF
+    print_success "README.md generated."
+}
 
 # ================================================================= #
 #                      DEPENDENCY INSTALLATION
@@ -180,6 +260,9 @@ setup_symlinks() {
     create_symlink "$DOTFILES_DIR/zsh/.zshrc" "$HOME/.zshrc"
     create_symlink "$DOTFILES_DIR/zsh/.p10k.zsh" "$HOME/.p10k.zsh"
     create_symlink "$DOTFILES_DIR/git/.gitignore" "$HOME/.gitignore_global"
+    # VS Code settings (optional)
+    # create_symlink "$DOTFILES_DIR/vscode/settings.json" "$HOME/Library/Application Support/Code/User/settings.json"
+    # create_symlink "$DOTFILES_DIR/vscode/keybindings.json" "$HOME/Library/Application Support/Code/User/keybindings.json"
 
     # --- Safely link XDG configurations ---
     # This links each item inside .config individually, preserving existing user configs.
@@ -282,6 +365,17 @@ main() {
         exit 1
     fi
 
+    check_requirements
+
+    if [[ "$RESTORE_BACKUP" == true ]]; then
+        restore_backup
+        exit 0
+    fi
+    if [[ "$GENERATE_README" == true ]]; then
+        generate_readme
+        exit 0
+    fi
+
     echo -e "
     ${BLUE}╔══════════════════════════════════════════════════════╗
     ║                                                      ║
@@ -304,6 +398,11 @@ main() {
 
     print_status "Starting dotfiles installation..."
     print_status "Dotfiles source directory: $DOTFILES_DIR"
+
+    if [[ "$DRY_RUN" == true ]]; then
+        print_status "Dry-run: install_homebrew, install_useful_tools, install_oh_my_zsh, install_powerlevel10k, install_zsh_plugins, setup_symlinks, configure_git, setup_shell, configure_macos would be run."
+        exit 0
+    fi
 
     install_homebrew || exit 1 # Exit if Homebrew fails
     install_useful_tools
