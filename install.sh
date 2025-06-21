@@ -7,6 +7,10 @@
 # ================================================================= #
 set -e # Exit immediately if a command exits with a non-zero status.
 
+# Pre-emptively create a blank .zshrc in the home directory to prevent
+# Zsh's first-time setup wizard from asking to create one.
+touch ~/.zshrc
+
 # --- Colors for formatted output ---
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -118,8 +122,7 @@ EOF
 install_homebrew() {
     if ! command -v brew &>/dev/null; then
         print_status "Installing Homebrew..."
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
+        NONINTERACTIVE=true /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         # Attempt to add Homebrew to the current session's PATH
         local brew_path=""
         if [ -f "/opt/homebrew/bin/brew" ]; then # Apple Silicon
@@ -290,14 +293,22 @@ configure_git() {
     git config --global core.excludesfile "$HOME/.gitignore_global"
     print_success "Set global gitignore to ~/.gitignore_global"
 
-    if [[ -z "$(git config --global user.name)" ]]; then
-        read -p "Enter your Git username: " git_username
-        git config --global user.name "$git_username"
-    fi
+    # Only prompt for user info if running in an interactive terminal
+    if [ -t 0 ]; then
+        if [[ -z "$(git config --global user.name)" ]]; then
+            read -p "Enter your Git username: " git_username
+            git config --global user.name "$git_username"
+        fi
 
-    if [[ -z "$(git config --global user.email)" ]]; then
-        read -p "Enter your Git email: " git_email
-        git config --global user.email "$git_email"
+        if [[ -z "$(git config --global user.email)" ]]; then
+            read -p "Enter your Git email: " git_email
+            git config --global user.email "$git_email"
+        fi
+    else
+        print_warning "Running in non-interactive mode. Skipping Git user setup."
+        print_warning "Please configure Git manually by running:"
+        print_warning "  git config --global user.name \"Your Name\""
+        print_warning "  git config --global user.email \"your.email@example.com\""
     fi
     print_success "Git user info configured."
 }
@@ -381,7 +392,7 @@ main() {
     ║                                                      ║
     ║               DOTFILES INSTALLER                     ║
     ║                                                      ║
-    ║  This script will set up your development environment:  ║
+    ║ This script will set up your development environment:║
     ║  • Homebrew, Zsh, Oh My Zsh, Powerlevel10k           ║
     ║  • Essential command-line tools and Zsh plugins      ║
     ║  • Symlink configurations from this repository       ║
@@ -389,12 +400,12 @@ main() {
     ║                                                      ║
     ╚══════════════════════════════════════════════════════╝${NC}
     "
-    read -p "Do you want to proceed with the installation? (y/N): " -n 1 -r
-    echo
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        print_warning "Installation cancelled."
-        exit 0
-    fi
+    # read -p "Do you want to proceed with the installation? (y/N): " -n 1 -r
+    # echo
+    # if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    #     print_warning "Installation cancelled."
+    #     exit 0
+    # fi
 
     print_status "Starting dotfiles installation..."
     print_status "Dotfiles source directory: $DOTFILES_DIR"
