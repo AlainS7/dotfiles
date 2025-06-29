@@ -288,6 +288,20 @@ setup_symlinks() {
     print_success "All symlinks set up."
 }
 
+setup_git_hooks() {
+    print_status "Setting up Git hooks for sensitive info reminders..."
+    local hook_script="$DOTFILES_DIR/git/hook-reminder.sh"
+    local hooks_dir="$DOTFILES_DIR/.git/hooks"
+    if [ ! -d "$hooks_dir" ]; then
+        print_warning ".git/hooks directory not found. Skipping Git hook setup."
+        return
+    fi
+    ln -sf "$hook_script" "$hooks_dir/pre-commit"
+    ln -sf "$hook_script" "$hooks_dir/pre-push"
+    chmod +x "$hooks_dir/pre-commit" "$hooks_dir/pre-push"
+    print_success "Git hooks for pre-commit and pre-push are set up."
+}
+
 configure_git() {
     print_status "Configuring Git..."
     git config --global core.excludesfile "$HOME/.gitignore_global"
@@ -422,6 +436,7 @@ main() {
     install_zsh_plugins
 
     setup_symlinks
+    setup_git_hooks
     configure_git
     setup_shell
     configure_macos
