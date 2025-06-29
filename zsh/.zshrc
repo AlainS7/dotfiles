@@ -25,7 +25,14 @@ fi
 export ZSH="$HOME/.oh-my-zsh"
 
 # This block now correctly runs AFTER the brew command is available.
-ZSH_CUSTOM_CONFIG_DIR="${HOME}/Developer/personal/github.com/AlainS7/dotfiles/xdg/.config/zsh"
+# Set the custom config directory for zsh
+ZSH_CUSTOM_CONFIG_DIR="${HOME}/Projects/Developer/personal/github.com/AlainS7/dotfiles/xdg/.config/zsh"
+
+# Warn if the custom config directory does not exist
+if [ ! -d "$ZSH_CUSTOM_CONFIG_DIR" ]; then
+  echo "[.zshrc] WARNING: ZSH_CUSTOM_CONFIG_DIR does not exist: $ZSH_CUSTOM_CONFIG_DIR" >&2
+fi
+
 # --- Load environment variables first ---
 if [ -d "$ZSH_CUSTOM_CONFIG_DIR/environment" ]; then
   for env_file in "$ZSH_CUSTOM_CONFIG_DIR"/environment/*.zsh; do
@@ -195,3 +202,6 @@ if [ -d "$ZSH_CUSTOM_CONFIG_DIR" ]; then
     done
     unset misc_file
 fi
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
