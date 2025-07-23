@@ -1,3 +1,11 @@
+#!/bin/zsh
+# ~/.zshrc
+
+# Set DOTFILES_DIR if not already set
+if [ -z "$DOTFILES_DIR" ]; then
+    export DOTFILES_DIR="${HOME}/dotfiles"
+fi
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -26,7 +34,7 @@ export ZSH="$HOME/.oh-my-zsh"
 
 # This block now correctly runs AFTER the brew command is available.
 # Set the custom config directory for zsh
-ZSH_CUSTOM_CONFIG_DIR="${HOME}/Projects/Developer/personal/github.com/AlainS7/dotfiles/xdg/.config/zsh"
+ZSH_CUSTOM_CONFIG_DIR="${DOTFILES_DIR:-$HOME/dotfiles}/xdg/.config/zsh"
 
 # Warn if the custom config directory does not exist
 if [ ! -d "$ZSH_CUSTOM_CONFIG_DIR" ]; then
@@ -205,3 +213,10 @@ fi
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/alainsoto/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/alainsoto/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/alainsoto/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/alainsoto/google-cloud-sdk/completion.zsh.inc'; fi
+export PATH="/opt/homebrew/opt/libpq/bin:$PATH"

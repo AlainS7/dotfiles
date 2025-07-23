@@ -284,3 +284,8 @@ EOF
 alias gmi-mcp-status='echo "Run gemini and type /mcp to see server status"'
 alias gmi-mcp-tools='echo "Run gemini and type /tools to see available tools"'
 
+
+
+# ============================================================================
+# End of custom Gemini CLI aliases
+# ============================================================================
