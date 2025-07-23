@@ -100,7 +100,7 @@ NOTES.md
 *.orig
 
 # -----------------------------------------------------------------
-# DEVELOPMENT FILES
+# DEVELOPMENT & BUILD FILES
 # -----------------------------------------------------------------
 # IDE/Editor files
 .vscode/settings.json
@@ -114,6 +114,10 @@ NOTES.md
 *.so
 *.dylib
 *.dll
+
+# Build output directories
+build/
+dist/
 
 # -----------------------------------------------------------------
 # MACOS SPECIFIC
