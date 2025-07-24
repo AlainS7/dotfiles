@@ -172,6 +172,12 @@ setup_git_hooks() {
     ln -sf "$hook_script" "$hooks_dir/pre-push"
     chmod +x "$hooks_dir/pre-commit" "$hooks_dir/pre-push"
     print_success "Git hooks for pre-commit and pre-push are set up."
+
+    # Make custom scripts executable
+    print_status "Making custom scripts executable..."
+    chmod +x "$DOTFILES_DIR/scripts/hello.sh"
+    chmod +x "$DOTFILES_DIR/scripts/backup_dotfiles.sh"
+    print_success "Custom scripts are executable."
 }
 
 configure_git() {
@@ -286,6 +292,7 @@ main() {
     echo "  1. Restart your terminal (or log out/in) for all changes to take effect."
     echo "  2. Run 'p10k configure' to customize your Powerlevel10k prompt."
     echo "  3. Install a Nerd Font for the best terminal icon experience."
+    echo "  4. Run 'bats tests/' to execute your dotfiles tests."
     echo
     print_status "Enjoy your new environment! 🚀"
 }

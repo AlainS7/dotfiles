@@ -33,7 +33,7 @@ install_homebrew() {
 
 install_useful_tools() {
     print_status "Installing command-line tools via Homebrew..."
-    local tools=("fzf" "bat" "eza" "tree" "git" "curl" "wget" "jq")
+    local tools=("fzf" "bat" "eza" "tree" "git" "curl" "wget" "jq" "1password-cli" "bats-core")
 
     for tool in "${tools[@]}"; do
         if ! command -v "$tool" &>/dev/null; then

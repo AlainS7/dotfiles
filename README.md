@@ -11,6 +11,13 @@ This repository contains my personal dotfiles for macOS and Linux. The setup is 
 * **Powerlevel10k and Oh My Zsh:** The dotfiles include a pre-configured Powerlevel10k theme and Oh My Zsh for a powerful and visually appealing shell experience.
 * **Global .gitignore:** A global `.gitignore` file is included to prevent common unnecessary files from being committed to any repository.
 * **macOS Defaults:** The installation script includes a number of macOS-specific configurations to improve the user experience.
+* **Custom Scripts:** Easily add and manage your own shell scripts.
+* **Secrets Management:** Securely handle sensitive information using 1Password CLI.
+* **Automated Testing:** Ensure your configurations work as expected with Bats-Core.
+
+## Documentation
+
+For detailed information on how to use, customize, and extend these dotfiles, please refer to the [full documentation](./docs/README.md).
 
 ## Installation
 
