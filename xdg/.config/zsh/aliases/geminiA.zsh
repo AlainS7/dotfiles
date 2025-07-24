@@ -50,7 +50,7 @@ alias gmi-log='mkdir -p ~/gemini_logs && gemini "$@" | tee ~/gemini_logs/session
 # Quick file analysis shortcuts
 alias gmi-readme='gemini "@README.md Summarize this project"'
 alias gmi-pkg='gemini "@package.json What does this project do and what are its dependencies?"'
-alias gmi-git='gemini "@.gitignore What files are being ignored and why?"'
+alias gmi-gitignore='gemini "@.gitignore What files are being ignored and why?"'
 
 # Project analysis workflows
 alias gmi-review='gemini "@. Please review this codebase and provide feedback"'

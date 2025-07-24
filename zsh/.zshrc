@@ -3,8 +3,9 @@
 
 # Set DOTFILES_DIR if not already set
 if [ -z "$DOTFILES_DIR" ]; then
-    # Dynamically determine DOTFILES_DIR based on the location of this script
-    export DOTFILES_DIR="$(dirname $(dirname $(realpath $0)))"
+  # Dynamically determine DOTFILES_DIR based on the location of this script.
+  # realpath resolves the symlink to its target file.
+  export DOTFILES_DIR="$(dirname $(dirname $(realpath "$0")))"
 fi
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.

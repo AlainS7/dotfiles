@@ -47,4 +47,4 @@ load_1password_secrets() {
   fi
 }
 
-load_1password_secrets
+# load_1password_secrets
