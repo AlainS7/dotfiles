@@ -1,0 +1,23 @@
+# =============================================================================
+#   LOCAL MACHINE CONFIGURATION (TEMPLATE)
+# =============================================================================
+#
+# This file is a template for machine-specific settings that should not be
+# committed to the dotfiles repository (e.g., paths, secrets).
+#
+# The install script will copy this file to ~/.zshrc.local if it doesn't
+# exist. You can then edit ~/.zshrc.local to fit the current machine.
+#
+# =============================================================================
+
+# --- Google Cloud SDK ---
+# The path to your Google Cloud SDK installation may be machine-specific.
+# Uncomment and update the path here if needed.
+# if [ -f '$HOME/google-cloud-sdk/path.zsh.inc' ]; then . '$HOME/google-cloud-sdk/path.zsh.inc'; fi
+# if [ -f '$HOME/google-cloud-sdk/completion.zsh.inc' ]; then . '$HOME/google-cloud-sdk/completion.zsh.inc'; fi
+
+
+# --- Homebrew Packages ---
+# Add paths for specific Homebrew packages. The path can differ between
+# Intel Macs (/usr/local/opt) and Apple Silicon Macs (/opt/homebrew/opt).
+# export PATH="/opt/homebrew/opt/libpq/bin:$PATH"

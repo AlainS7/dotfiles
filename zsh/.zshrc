@@ -3,7 +3,8 @@
 
 # Set DOTFILES_DIR if not already set
 if [ -z "$DOTFILES_DIR" ]; then
-    export DOTFILES_DIR="${HOME}/dotfiles"
+    # Dynamically determine DOTFILES_DIR based on the location of this script
+    export DOTFILES_DIR="$(dirname $(dirname $(realpath $0)))"
 fi
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
@@ -41,15 +42,7 @@ if [ ! -d "$ZSH_CUSTOM_CONFIG_DIR" ]; then
   echo "[.zshrc] WARNING: ZSH_CUSTOM_CONFIG_DIR does not exist: $ZSH_CUSTOM_CONFIG_DIR" >&2
 fi
 
-# --- Load environment variables first ---
-if [ -d "$ZSH_CUSTOM_CONFIG_DIR/environment" ]; then
-  for env_file in "$ZSH_CUSTOM_CONFIG_DIR"/environment/*.zsh; do
-    if [ -r "$env_file" ]; then
-      source "$env_file"
-    fi
-  done
-  unset env_file
-fi
+
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time Oh My Zsh is loaded, in which case,
@@ -164,59 +157,53 @@ source $ZSH/oh-my-zsh.sh
 # -------------------------------------------------------------------
 #   Load Custom Configurations
 # -------------------------------------------------------------------
-# The environment variables block was moved from here to the top.
-# Loading aliases and functions after OMZ is correct.
+#
+# Load all .zsh files from the custom config directory and its subdirectories.
+# This is done in a specific order to ensure that environment variables are
+# available for other scripts.
+#
+# The loading order is:
+#   1. Environment variables (environment/*.zsh)
+#   2. Functions (functions/*.zsh)
+#   3. Aliases (aliases/*.zsh)
+#   4. Any other .zsh files in the root of the custom config directory
+#
 # -------------------------------------------------------------------
 
-# --- Load functions ---
-# Check if the functions directory exists
-if [ -d "$ZSH_CUSTOM_CONFIG_DIR/functions" ]; then
-  # Loop through all files in the 'functions' directory that end with .zsh
-  for func_file in "$ZSH_CUSTOM_CONFIG_DIR"/functions/*.zsh; do
-    # Source the file if it exists and is readable
-    if [ -r "$func_file" ]; then
-      source "$func_file"
-    fi
-  done
-  # Unset the variable
-  unset func_file
-fi
-
-# --- Load aliases ---
-# Check if the aliases directory exists before trying to loop
-if [ -d "$ZSH_CUSTOM_CONFIG_DIR/aliases" ]; then
-  # Loop through all files in the 'aliases' directory that end with .zsh
-  for alias_file in "$ZSH_CUSTOM_CONFIG_DIR"/aliases/*.zsh; do
-    # Source the file if it exists and is readable
-    if [ -r "$alias_file" ]; then
-      source "$alias_file"
-    fi
-  done
-  # Unset the variable to keep the shell environment clean
-  unset alias_file
-fi
-
-# --- Load any other root-level .zsh files (like example.zsh if it contains general configs) ---
-# This will source files directly in ~/.zsh-config that are NOT in a subdirectory
-# It's good for general configs that don't fit into aliases/functions/environment
 if [ -d "$ZSH_CUSTOM_CONFIG_DIR" ]; then
+    # Load environment variables first
+    for env_file in "$ZSH_CUSTOM_CONFIG_DIR"/environment/*.zsh; do
+        if [ -r "$env_file" ]; then
+            source "$env_file"
+        fi
+    done
+    unset env_file
+
+    # Load functions
+    for func_file in "$ZSH_CUSTOM_CONFIG_DIR"/functions/*.zsh; do
+        if [ -r "$func_file" ]; then
+            source "$func_file"
+        fi
+    done
+    unset func_file
+
+    # Load aliases
+    for alias_file in "$ZSH_CUSTOM_CONFIG_DIR"/aliases/*.zsh; do
+        if [ -r "$alias_file" ]; then
+            source "$alias_file"
+        fi
+    done
+    unset alias_file
+
+    # Load any other root-level .zsh files
     for misc_file in "$ZSH_CUSTOM_CONFIG_DIR"/*.zsh; do
-        # Exclude files already moved to subdirectories, if they somehow linger or are specific
-        # This is a basic exclusion; you might need more sophisticated checks if paths overlap.
-        # Generally, with a clean move, this isn't strictly necessary for files that *were* moved.
-        if [[ "$misc_file" != */aliases/* && "$misc_file" != */functions/* && "$misc_file" != */environment/* && -r "$misc_file" ]]; then
+        if [ -f "$misc_file" ] && [ -r "$misc_file" ]; then
             source "$misc_file"
         fi
     done
     unset misc_file
 fi
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/alainsoto/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/alainsoto/google-cloud-sdk/path.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/Users/alainsoto/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/alainsoto/google-cloud-sdk/completion.zsh.inc'; fi
-export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
+# Load local machine-specific settings, if the file exists.
+if [ -f "$HOME/.zshrc.local" ]; then
+    source "$HOME/.zshrc.local"
+fi

@@ -149,6 +149,15 @@ setup_symlinks() {
     fi
 
     print_success "All symlinks set up."
+
+    # --- Set up local config file ---
+    if [ ! -f "$HOME/.zshrc.local" ]; then
+        print_status "Creating local Zsh config from template..."
+        cp "$DOTFILES_DIR/zsh/.zshrc.local.example" "$HOME/.zshrc.local"
+        print_success "Created ~/.zshrc.local. Please edit it to match your machine-specific settings."
+    else
+        print_success "Local Zsh config already exists at ~/.zshrc.local. Skipping creation."
+    fi
 }
 
 setup_git_hooks() {
