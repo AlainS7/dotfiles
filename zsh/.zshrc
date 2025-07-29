@@ -5,8 +5,20 @@
 if [ -z "$DOTFILES_DIR" ]; then
   # Dynamically determine DOTFILES_DIR based on the location of this script.
   # In zsh, ${(%):-%x} expands to the path of the file being sourced.
-  # We use realpath to resolve the symlink to its target file.
-  export DOTFILES_DIR="$(dirname "$(dirname "$(realpath "${(%):-%x}")")")"
+  # Use realpath to resolve the symlink to its target file.
+  # Try to determine DOTFILES_DIR robustly for local, Codespaces, and fallback scenarios
+  if [ -n "${(%):-%x}" ] && [ -f "${(%):-%x}" ]; then
+    export DOTFILES_DIR="$(dirname "$(dirname "$(realpath "${(%):-%x}")")")"
+  elif [ -d "$HOME/dotfiles" ]; then
+    export DOTFILES_DIR="$HOME/dotfiles"
+  elif [ -d "/workspaces/.codespaces/.persistedshare/dotfiles" ]; then
+    export DOTFILES_DIR="/workspaces/.codespaces/.persistedshare/dotfiles"
+  else
+    export DOTFILES_DIR=""
+  fi
+    if [ -z "$DOTFILES_DIR" ]; then
+        echo "[.zshrc] WARNING: DOTFILES_DIR is not set. Please set it to your dotfiles directory." >&2
+    fi
 fi
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
