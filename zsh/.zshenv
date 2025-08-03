@@ -31,6 +31,7 @@ export ZDOTDIR="$DOTFILES_DIR/xdg/.config/zsh"
 # Set the path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
+
 # Add Homebrew to the PATH.
 # This ensures that `brew` and its installed packages are available.
 if [ -f "/opt/homebrew/bin/brew" ]; then # Apple Silicon Macs
@@ -39,4 +40,9 @@ elif [ -f "/usr/local/bin/brew" ]; then # Intel Macs
   eval "$(/usr/local/bin/brew shellenv)"
 elif [ -f "/home/linuxbrew/.linuxbrew/bin/brew" ]; then # Linux / Codespaces
   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
+
+# Always source main-env.zsh for environment variables (EDITOR, PATH, etc.)
+if [ -n "$DOTFILES_DIR" ] && [ -f "$DOTFILES_DIR/xdg/.config/zsh/environment/main-env.zsh" ]; then
+  source "$DOTFILES_DIR/xdg/.config/zsh/environment/main-env.zsh"
 fi
