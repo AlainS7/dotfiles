@@ -1,0 +1,28 @@
+name: Bats Tests
+
+on:
+  push:
+    paths:
+      - '**.bats'
+      - 'scripts/**'
+      - 'xdg/.config/zsh/**'
+      - 'install.sh'
+      - '.github/workflows/bats.yml'
+  pull_request:
+    paths:
+      - '**.bats'
+      - 'scripts/**'
+      - 'xdg/.config/zsh/**'
+      - 'install.sh'
+      - '.github/workflows/bats.yml'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install Bats
+        run: sudo apt-get update && sudo apt-get install -y bats
+      - name: Run Bats tests
+        run: bats tests/

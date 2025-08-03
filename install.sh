@@ -1,3 +1,4 @@
+
 #!/bin/bash
 # ================================================================= #
 #                 DOTFILES INSTALLATION SCRIPT                      #
@@ -7,6 +8,17 @@
 # ================================================================= #
 set -e # Exit immediately if a command exits with a non-zero status.
 
+# --- Dry-run mode (must be checked before sourcing anything) ---
+DRY_RUN=false
+for arg in "$@"; do
+    if [[ "$arg" == "--dry-run" ]]; then
+        DRY_RUN=true
+        # Print message and exit immediately for dry-run
+        echo "[install.sh] Running in dry-run mode. No changes will be made."
+        exit 0
+    fi
+done
+
 # --- Script directory ---
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -15,13 +27,8 @@ source "$DOTFILES_DIR/lib/utils.sh"
 source "$DOTFILES_DIR/lib/brew.sh"
 source "$DOTFILES_DIR/lib/zsh.sh"
 
-# --- Dry-run mode ---
-DRY_RUN=false
+# --- Parse other args ---
 for arg in "$@"; do
-    if [[ "$arg" == "--dry-run" ]]; then
-        DRY_RUN=true
-        print_status "Running in dry-run mode. No changes will be made."
-    fi
     if [[ "$arg" == "--restore-backup" ]]; then
         RESTORE_BACKUP=true
     fi
@@ -123,8 +130,9 @@ create_symlink() {
 setup_symlinks() {
     print_status "Setting up core configuration symlinks..."
 
-    create_symlink "$DOTFILES_DIR/zsh/.zshrc" "$HOME/.zshrc"
-    create_symlink "$DOTFILES_DIR/zsh/.p10k.zsh" "$HOME/.p10k.zsh"
+    create_symlink "$DOTFILES_DIR/xdg/.config/zsh/.zshrc" "$HOME/.zshrc"
+    create_symlink "$DOTFILES_DIR/xdg/.config/zsh/.p10k.zsh" "$HOME/.p10k.zsh"
+    create_symlink "$DOTFILES_DIR/zsh/.zshenv" "$HOME/.zshenv"
     create_symlink "$DOTFILES_DIR/git/.gitignore" "$HOME/.gitignore_global"
     # VS Code settings (optional)
     # create_symlink "$DOTFILES_DIR/vscode/settings.json" "$HOME/Library/Application Support/Code/User/settings.json"
@@ -228,11 +236,18 @@ configure_macos() {
 #                         MAIN EXECUTION
 # ================================================================= #
 main() {
+
+    # Check for dry-run mode as early as possible
+    if [[ "$DRY_RUN" == true ]]; then
+        print_status "Running in dry-run mode. No changes will be made."
+        exit 0
+    fi
+
     # Check OS compatibility first
     if [[ "$(uname)" != "Darwin" && "$(uname)" != "Linux" ]]; then
         print_error "This script is designed for macOS and Linux only."
         exit 1
-    }
+    fi
 
     check_requirements
 
@@ -243,7 +258,7 @@ main() {
     if [[ "$GENERATE_README" == true ]]; then
         generate_readme
         exit 0
-    }
+    fi
 
     echo -e "
     ${BLUE}╔══════════════════════════════════════════════════════╗
@@ -267,11 +282,6 @@ main() {
 
     print_status "Starting dotfiles installation..."
     print_status "Dotfiles source directory: $DOTFILES_DIR"
-
-    if [[ "$DRY_RUN" == true ]]; then
-        print_status "Dry-run: install_homebrew, install_useful_tools, install_oh_my_zsh, install_powerlevel10k, install_zsh_plugins, setup_symlinks, configure_git, setup_shell, configure_macos would be run."
-        exit 0
-    }
 
     install_homebrew || exit 1 # Exit if Homebrew fails
     install_useful_tools
