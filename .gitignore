@@ -127,8 +127,6 @@ dist/
 xdg/.config/zsh/.zcompdump*
 xdg/.config/zsh/.zsh_sessions/
 xdg/.config/zsh/_expiration_check_timestamp
-testfile.txt
-debug_output.txt
 
 # -----------------------------------------------------------------
 # MACOS SPECIFIC
