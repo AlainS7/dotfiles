@@ -16,8 +16,8 @@ setup() {
 }
 
 @test "PATH includes dotfiles scripts and local bin" {
-  # Source the path.zsh and check that PATH includes expected directories
-  run zsh -c "source '$DOTFILES_DIR/xdg/.config/zsh/environment/path.zsh'; echo $PATH"
+  # Source the main-env.zsh and check that PATH includes expected directories
+  run zsh -c "source '$DOTFILES_DIR/xdg/.config/zsh/environment/main-env.zsh'; echo $PATH"
   [ "$status" -eq 0 ]
   echo "$output" | grep -q "$HOME/.local/bin" || { echo 'PATH does not include $HOME/.local/bin' >&2; exit 1; }
   echo "$output" | grep -q "$DOTFILES_DIR/scripts" || { echo 'PATH does not include $DOTFILES_DIR/scripts' >&2; exit 1; }

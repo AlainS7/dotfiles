@@ -1,17 +1,3 @@
-# Negative test: mkcd with no argument
-@test "mkcd function with no argument returns error" {
-  source "$DOTFILES_DIR/xdg/.config/zsh/functions/main-functions.zsh"
-  run mkcd
-  [ "$status" -ne 0 ]
-}
-
-# Negative test: extract with missing file
-@test "extract function with missing file returns error" {
-  source "$DOTFILES_DIR/xdg/.config/zsh/functions/main-functions.zsh"
-  run extract /tmp/nonexistentfile.tar.gz
-  [ "$status" -eq 0 ]
-  [[ "$output" == *"is not a valid file"* ]]
-}
 #!/usr/bin/env bats
 
 # Bats-Core test file for custom shell functions in dotfiles
@@ -49,4 +35,19 @@ setup() {
   [ -f "/tmp/testfile.txt" ]
   # Clean up
   rm -f "$archive" "/tmp/testfile.txt"
+}
+
+# Negative test: mkcd with no argument
+@test "mkcd function with no argument returns error" {
+  source "$DOTFILES_DIR/xdg/.config/zsh/functions/main-functions.zsh"
+  run mkcd
+  [ "$status" -ne 0 ]
+}
+
+# Negative test: extract with missing file
+@test "extract function with missing file returns error" {
+  source "$DOTFILES_DIR/xdg/.config/zsh/functions/main-functions.zsh"
+  run extract /tmp/nonexistentfile.tar.gz
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"is not a valid file"* ]]
 }

@@ -1,5 +1,5 @@
 
-#!/bin/bash
+#!/usr/bin/env zsh
 # ================================================================= #
 #                 DOTFILES INSTALLATION SCRIPT                      #
 # ================================================================= #
@@ -13,9 +13,6 @@ DRY_RUN=false
 for arg in "$@"; do
     if [[ "$arg" == "--dry-run" ]]; then
         DRY_RUN=true
-        # Print message and exit immediately for dry-run
-        echo "[install.sh] Running in dry-run mode. No changes will be made."
-        exit 0
     fi
 done
 
@@ -28,16 +25,17 @@ source "$DOTFILES_DIR/lib/brew.sh"
 source "$DOTFILES_DIR/lib/zsh.sh"
 
 # --- Parse other args ---
-for arg in "$@"; do
-    if [[ "$arg" == "--restore-backup" ]]; then
-        RESTORE_BACKUP=true
-    fi
-    if [[ "$arg" == "--generate-readme" ]]; then
-        GENERATE_README=true
-    fi
-    # Remove processed args from positional parameters
-    shift
-    set -- "$@"
+
+# --- Robust argument parsing ---
+while (( $# > 0 )); do
+    case "$1" in
+        --restore-backup)
+            RESTORE_BACKUP=true
+            ;;
+        --generate-readme)
+            GENERATE_README=true
+            ;;
+    esac
     shift
 done
 
@@ -255,6 +253,7 @@ main() {
     # Check for dry-run mode as early as possible
     if [[ "$DRY_RUN" == true ]]; then
         print_status "Running in dry-run mode. No changes will be made."
+        print_status "Dry-run: install_homebrew, install_useful_tools, install_oh_my_zsh, install_powerlevel10k, install_zsh_plugins, setup_symlinks, configure_git, setup_shell, configure_macos would be run."
         exit 0
     fi
 

@@ -29,7 +29,7 @@ setup() {
 
 @test "install.sh runs in dry-run mode" {
   # Run install.sh with --dry-run and check for expected output
-  run bash "$DOTFILES_DIR/install.sh" --dry-run
+  run zsh "$DOTFILES_DIR/install.sh" --dry-run
   [ "$status" -eq 0 ]
   echo "$output" | grep -q "Running in dry-run mode" || { echo 'install.sh did not run in dry-run mode.' >&2; exit 1; }
 }

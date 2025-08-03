@@ -8,7 +8,7 @@ gmi-config() {
     if [[ ! -f "$config_dir/settings.json" ]]; then
         cat > "$config_dir/settings.json" <<EOF
 {
-  "theme": "dark",x
+  "theme": "dark",
   "fileFiltering": {
     "respectGitignore": true,
     "excludePatterns": [".env*", "*.log", "node_modules/**", "dist/**", ".git/**"]

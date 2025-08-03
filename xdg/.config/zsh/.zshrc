@@ -96,19 +96,21 @@ fi
 ZSH_CUSTOM_CONFIG_DIR="${ZDOTDIR:-$HOME}/"
 if [ -d "$ZSH_CUSTOM_CONFIG_DIR" ]; then
     # Load environment variables first
-    for env_file in "$ZSH_CUSTOM_CONFIG_DIR"environment/*.zsh; do
+    setopt globstar
+
+    for env_file in "$ZSH_CUSTOM_CONFIG_DIR"environment/**/*.zsh; do
         [ -r "$env_file" ] && source "$env_file"
     done
     unset env_file
 
     # Load functions
-    for func_file in "$ZSH_CUSTOM_CONFIG_DIR"functions/*.zsh; do
+    for func_file in "$ZSH_CUSTOM_CONFIG_DIR"functions/**/*.zsh; do
         [ -r "$func_file" ] && source "$func_file"
     done
     unset func_file
 
     # Load aliases
-    for alias_file in "$ZSH_CUSTOM_CONFIG_DIR"aliases/*.zsh; do
+    for alias_file in "$ZSH_CUSTOM_CONFIG_DIR"aliases/**/*.zsh; do
         [ -r "$alias_file" ] && source "$alias_file"
     done
     unset alias_file

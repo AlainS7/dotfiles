@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source "$(dirname "${BASH_SOURCE[0]}")/utils.sh"
+source "$(dirname "${BASH_SOURCE[0]:-${(%):-%x}}")/utils.sh"
 
 install_oh_my_zsh() {
     if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
