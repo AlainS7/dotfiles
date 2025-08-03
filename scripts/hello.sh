@@ -1,3 +1,3 @@
 #!/bin/bash
 
-echo "Hello from your custom scripts directory!"
+echo "Hello from the custom scripts directory!"

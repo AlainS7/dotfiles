@@ -9,8 +9,8 @@ setup() {
 }
 
 @test "EDITOR environment variable is set to code --wait" {
-  # Source the main_env.zsh and check that EDITOR is set correctly
-  run zsh -c "source '$DOTFILES_DIR/xdg/.config/zsh/environment/main_env.zsh'; echo $EDITOR"
+  # Source the main-env.zsh and check that EDITOR is set correctly
+  run zsh -c "source '$DOTFILES_DIR/xdg/.config/zsh/environment/main-env.zsh'; echo $EDITOR"
   [ "$status" -eq 0 ]
   [ "$output" = "code --wait" ]
 }

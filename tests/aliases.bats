@@ -9,13 +9,13 @@ setup() {
 }
 
 @test "c alias is defined as clear" {
-  # Source general.zsh and check that 'c' alias is set to 'clear'
-  source "$DOTFILES_DIR/xdg/.config/zsh/aliases/general.zsh"
+  # Source general-aliases.zsh and check that 'c' alias is set to 'clear'
+  source "$DOTFILES_DIR/xdg/.config/zsh/aliases/general-aliases.zsh"
   alias | grep -q "c='clear'" || { echo 'c alias is not defined as clear.' >&2; exit 1; }
 }
 
 @test "dotgit alias is set correctly" {
-  # Source general.zsh and check that 'dotgit' alias is set correctly
-  source "$DOTFILES_DIR/xdg/.config/zsh/aliases/general.zsh"
+  # Source general-aliases.zsh and check that 'dotgit' alias is set correctly
+  source "$DOTFILES_DIR/xdg/.config/zsh/aliases/general-aliases.zsh"
   alias | grep -q "dotgit='/usr/bin/git --git-dir=\$HOME/.dotfiles/ --work-tree=\$HOME'" || { echo 'dotgit alias is not set correctly.' >&2; exit 1; }
 }

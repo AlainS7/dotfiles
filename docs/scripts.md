@@ -4,7 +4,7 @@ These dotfiles include a dedicated `scripts` directory (`./scripts/`) for your p
 
 ## How it Works
 
-The `install.sh` script ensures that the `./scripts/` directory is added to your shell's `PATH` environment variable. This is configured in `xdg/.config/zsh/environment/main_env.zsh`.
+The `install.sh` script ensures that the `./scripts/` directory is added to your shell's `PATH` environment variable. This is configured in `xdg/.config/zsh/environment/main-env.zsh`.
 
 ## Usage
 

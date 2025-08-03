@@ -9,8 +9,8 @@ setup() {
 }
 
 @test "mkcd function creates directory and changes into it" {
-  # Source the main_functions.zsh to make mkcd available
-  source "$DOTFILES_DIR/xdg/.config/zsh/functions/main_functions.zsh"
+  # Source the main-functions.zsh to make mkcd available
+  source "$DOTFILES_DIR/xdg/.config/zsh/functions/main-functions.zsh"
   type mkcd &>/dev/null || { echo 'mkcd function is not defined after sourcing.' >&2; exit 1; }
   local test_dir="/tmp/test_mkcd_$(date +%s%N)"
   # Run mkcd and check directory creation
@@ -22,8 +22,8 @@ setup() {
 }
 
 @test "extract function extracts tar.bz2 archive" {
-  # Source the main_functions.zsh to make extract available
-  source "$DOTFILES_DIR/xdg/.config/zsh/functions/main_functions.zsh"
+  # Source the main-functions.zsh to make extract available
+  source "$DOTFILES_DIR/xdg/.config/zsh/functions/main-functions.zsh"
   type extract &>/dev/null || { echo 'extract function is not defined after sourcing.' >&2; exit 1; }
   local test_file="/tmp/testfile.txt"
   local archive="/tmp/testarchive.tar.bz2"

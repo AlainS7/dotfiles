@@ -12,7 +12,7 @@ setup() {
   # Run hello.sh and check its output
   run "$DOTFILES_DIR/scripts/hello.sh"
   [ "$status" -eq 0 ]
-  [ "$output" = "Hello from your custom scripts directory!" ]
+  [ "$output" = "Hello from the custom scripts directory!" ]
 }
 
 @test "backup_dotfiles.sh is executable" {
