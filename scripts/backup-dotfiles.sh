@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # This script automates backing up dotfiles to a remote Git repository.
 

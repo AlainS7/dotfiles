@@ -1,4 +1,3 @@
-
 #!/usr/bin/env zsh
 # ================================================================= #
 #                 DOTFILES INSTALLATION SCRIPT                      #

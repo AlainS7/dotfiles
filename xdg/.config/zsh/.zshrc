@@ -1,4 +1,3 @@
-#!/bin/zsh
 # ~/.zshrc
 ZSH_THEME="powerlevel10k/powerlevel10k"
 
@@ -96,7 +95,7 @@ fi
 ZSH_CUSTOM_CONFIG_DIR="${ZDOTDIR:-$HOME}/"
 if [ -d "$ZSH_CUSTOM_CONFIG_DIR" ]; then
     # Load environment variables first
-    setopt globstar
+    # setopt globstar # bash option
 
     for env_file in "$ZSH_CUSTOM_CONFIG_DIR"environment/**/*.zsh; do
         [ -r "$env_file" ] && source "$env_file"
