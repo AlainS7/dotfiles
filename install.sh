@@ -50,8 +50,12 @@ restore_backup() {
         return 1
     fi
     print_status "Restoring backup from $latest_backup..."
-    cp -r "$latest_backup"/* "$HOME"/
-    print_success "Backup restored."
+    if cp -r "$latest_backup"/* "$HOME"/; then
+        print_success "Backup restored."
+    else
+        print_error "Failed to restore backup from $latest_backup."
+        return 1
+    fi
 }
 
 # --- README.md generator ---
@@ -118,13 +122,21 @@ create_symlink() {
         # Target is a regular file or directory, so back it up
         print_warning "Existing config found at $target_path. Backing it up."
         mkdir -p "$backup_dir"
-        mv "$target_path" "$backup_dir/"
-        print_success "Backed up '$target_path' to '$backup_dir/'"
+        if mv "$target_path" "$backup_dir/"; then
+            print_success "Backed up '$target_path' to '$backup_dir/'"
+        else
+            print_error "Failed to back up '$target_path' to '$backup_dir/'"
+            return 1
+        fi
     fi
 
     # Create the new symlink
-    ln -s "$source_path" "$target_path"
-    print_success "Linked $source_path -> $target_path"
+    if ln -s "$source_path" "$target_path"; then
+        print_success "Linked $source_path -> $target_path"
+    else
+        print_error "Failed to create symlink: $source_path -> $target_path"
+        return 1
+    fi
 }
 
 setup_symlinks() {
@@ -161,8 +173,11 @@ setup_symlinks() {
     # --- Set up local config file ---
     if [ ! -f "$HOME/.zshrc.local" ]; then
         print_status "Creating local Zsh config from template..."
-        cp "$DOTFILES_DIR/zsh/.zshrc.local.example" "$HOME/.zshrc.local"
-        print_success "Created ~/.zshrc.local. Please edit it to match your machine-specific settings."
+        if cp "$DOTFILES_DIR/zsh/.zshrc.local.example" "$HOME/.zshrc.local"; then
+            print_success "Created ~/.zshrc.local. Please edit it to match your machine-specific settings."
+        else
+            print_error "Failed to create ~/.zshrc.local from template."
+        fi
     else
         print_success "Local Zsh config already exists at ~/.zshrc.local. Skipping creation."
     fi

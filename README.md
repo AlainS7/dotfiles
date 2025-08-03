@@ -38,4 +38,33 @@ The script will back up any existing dotfiles to a `~/.dotfiles-backup` director
 * **Environment Variables:** Essential environment variables are set in `zsh/.zshenv`.
 * **Aliases:** To add or modify aliases, edit the files in the `xdg/.config/zsh/aliases` directory.
 * **Functions:** To add or modify functions, edit the files in the `xdg/.config/zsh/functions` directory.
+
+## Usage Examples for Custom Functions
+
+### mkcd
+
+Create a directory and change into it:
+
+```sh
+mkcd my_new_folder
+```
+
+### explain
+
+Explain a command output or text using Gemini:
+
+```sh
+ls -l | explain
+explain "What does this error mean?"
+```
+
+### extract
+
+Extract any supported archive:
+
+```sh
+extract archive.tar.gz
+extract file.zip
+```
+
 * **Homebrew Packages:** To add or remove Homebrew packages, edit the `install.sh` script.
