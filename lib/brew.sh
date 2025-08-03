@@ -41,7 +41,7 @@ install_useful_tools() {
             brew install "$tool"
 
             # Special post-install for fzf
-            if [ "$tool" == "fzf" ]; then
+            if [ "$tool" = "fzf" ]; then
                 print_status "Running fzf post-installation script..."
                 # Use `yes` to auto-confirm prompts from the fzf install script
                 if [ -f "$(brew --prefix)/opt/fzf/install" ]; then

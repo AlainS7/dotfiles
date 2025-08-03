@@ -16,7 +16,12 @@ for arg in "$@"; do
 done
 
 # --- Script directory ---
-DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Compatible with both Bash and Zsh
+if [[ -n "${BASH_SOURCE[0]:-}" ]]; then
+    DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+else
+    DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
+fi
 
 # --- Source helper scripts ---
 source "$DOTFILES_DIR/lib/utils.sh"
