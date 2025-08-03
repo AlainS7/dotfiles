@@ -26,11 +26,14 @@ Your dotfiles are designed to provide a robust, portable, and efficient developm
 │       └── zsh/
 │           ├── aliases/      # Custom Zsh aliases
 │           ├── environment/  # Custom Zsh environment variables
-│           └── functions/    # Custom Zsh functions
-├── zsh/                  # Zsh-specific configurations
+│           ├── functions/    # Custom Zsh functions
+│           ├── .p10k.zsh     # Powerlevel10k configuration
+│           └── .zshrc        # Main Zsh configuration (sourced by .zshenv)
+├── zsh/                  # Zsh-related files (minimal, includes .zshenv)
+│   ├── .zshenv           # Essential Zsh environment variables (sourced first)
+│   └── .zshrc.local.example  # Template for machine-specific Zsh settings
 ├── .bashrc               # Bash fallback/autolauncher
 ├── .gitignore            # Git ignore rules for this repository
-├── .zshrc.local.example  # Template for machine-specific Zsh settings
 └── install.sh            # Main installation script
 ```
 

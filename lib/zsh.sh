@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source "$(dirname "${BASH_SOURCE[0]}")/utils.sh"
+source "$(dirname "${BASH_SOURCE[0]:-${(%):-%x}}")/utils.sh"
 
 install_oh_my_zsh() {
     if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
@@ -73,6 +73,7 @@ setup_shell() {
         print_warning "Changing the default shell requires administrator privileges."
         print_warning "Please run the following command manually to complete the process:"
         echo -e "\n    ${YELLOW}chsh -s \"$zsh_path\"${NC}\n"
+        print_warning "Also, ensure ~/.zshenv is sourced for XDG compliance."
         print_warning "You will need to log out and log back in for the change to take effect."
     else
         print_success "Zsh is already the default shell."

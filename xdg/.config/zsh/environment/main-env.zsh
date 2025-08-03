@@ -1,10 +1,34 @@
+
 # --------------------------------------------------------------------
 # >> ENVIRONMENT VARIABLES & SHELL OPTIONS
 # --------------------------------------------------------------------
 
+# Ensure critical variables are set first for CI and tests
+export EDITOR="code --wait"
+export PATH="$DOTFILES_DIR/scripts:$PATH"
+
+
+# =================== ENVIRONMENT VARIABLES ===================
 # Set the default text editor for command-line programs (e.g., git commit)
 # Use "code --wait" for VS Code, or "vim", "nano", etc.
 export EDITOR="code --wait"
+# Set the default visual editor (used by some CLI tools)
+export VISUAL="$EDITOR"
+# Set the default pager for long output (e.g., man, git log)
+export PAGER="less"
+# Set language/locale for consistent UTF-8 support
+export LANG="en_US.UTF-8"
+# Add custom bin directories to PATH
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="$DOTFILES_DIR/scripts:$PATH"
+# Add Homebrew to PATH if not already present (redundant with .zshenv, but safe)
+if [ -f "/opt/homebrew/bin/brew" ]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [ -f "/usr/local/bin/brew" ]; then
+  eval "$(/usr/local/bin/brew shellenv)"
+elif [ -f "/home/linuxbrew/.linuxbrew/bin/brew" ]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
 
 
 

@@ -1,0 +1,39 @@
+name: Bats Tests
+
+on:
+  push:
+    paths:
+      - '**.bats'
+      - 'scripts/**'
+      - 'xdg/.config/zsh/**'
+      - 'install.sh'
+      - '.github/workflows/bats.yml'
+  pull_request:
+    paths:
+      - '**.bats'
+      - 'scripts/**'
+      - 'xdg/.config/zsh/**'
+      - 'install.sh'
+      - '.github/workflows/bats.yml'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install Bats
+        run: sudo apt-get update && sudo apt-get install -y bats
+      - name: Install Zsh
+        run: sudo apt-get install -y zsh
+      - name: Set up DOTFILES_DIR and symlinks
+        run: |
+          export DOTFILES_DIR="$GITHUB_WORKSPACE"
+          ln -sf "$DOTFILES_DIR/xdg/.config/zsh/.zshrc" "$HOME/.zshrc"
+          ln -sf "$DOTFILES_DIR/xdg/.config/zsh/.p10k.zsh" "$HOME/.p10k.zsh"
+          ln -sf "$DOTFILES_DIR/zsh/.zshenv" "$HOME/.zshenv"
+          echo "DOTFILES_DIR=$DOTFILES_DIR" >> $GITHUB_ENV
+      - name: Install gemini CLI
+        run: npm install -g @google/gemini-cli
+      - name: Run Bats tests
+        run: bats tests/

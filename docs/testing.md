@@ -39,7 +39,7 @@ Bats-Core tests are written as shell scripts with a special syntax. Each test fi
 
 ### Sourcing Files in Tests
 
-To test functions defined in your dotfiles (e.g., `mkcd` from `xdg/.config/zsh/functions/main_functions.zsh`), you need to `source` them within your test. Remember that Bats-Core runs each test in a subshell, so changes to environment variables or functions are isolated to that test.
+To test functions defined in your dotfiles (e.g., `mkcd` from `xdg/.config/zsh/functions/main-functions.zsh`), you need to `source` them within your test. Remember that Bats-Core runs each test in a subshell, so changes to environment variables or functions are isolated to that test.
 
 ```bats
 #!/usr/bin/env bats
@@ -48,7 +48,7 @@ To test functions defined in your dotfiles (e.g., `mkcd` from `xdg/.config/zsh/f
   # Ensure DOTFILES_DIR is set for the test environment
   # This path is relative to the test file's location
   DOTFILES_DIR="$(cd "$(dirname "${BATS_TEST_DIRNAME}")/.." && pwd)"
-  source "$DOTFILES_DIR/xdg/.config/zsh/functions/main_functions.zsh"
+  source "$DOTFILES_DIR/xdg/.config/zsh/functions/main-functions.zsh"
 
   run my_function "test_arg"
   [ "$status" -eq 0 ]

@@ -1,4 +1,5 @@
-#!/bin/bash
+
+#!/usr/bin/env zsh
 # ================================================================= #
 #                 DOTFILES INSTALLATION SCRIPT                      #
 # ================================================================= #
@@ -6,6 +7,14 @@
 #  It prioritizes Homebrew for cross-platform package consistency.    #
 # ================================================================= #
 set -e # Exit immediately if a command exits with a non-zero status.
+
+# --- Dry-run mode (must be checked before sourcing anything) ---
+DRY_RUN=false
+for arg in "$@"; do
+    if [[ "$arg" == "--dry-run" ]]; then
+        DRY_RUN=true
+    fi
+done
 
 # --- Script directory ---
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -15,22 +24,18 @@ source "$DOTFILES_DIR/lib/utils.sh"
 source "$DOTFILES_DIR/lib/brew.sh"
 source "$DOTFILES_DIR/lib/zsh.sh"
 
-# --- Dry-run mode ---
-DRY_RUN=false
-for arg in "$@"; do
-    if [[ "$arg" == "--dry-run" ]]; then
-        DRY_RUN=true
-        print_status "Running in dry-run mode. No changes will be made."
-    fi
-    if [[ "$arg" == "--restore-backup" ]]; then
-        RESTORE_BACKUP=true
-    fi
-    if [[ "$arg" == "--generate-readme" ]]; then
-        GENERATE_README=true
-    fi
-    # Remove processed args from positional parameters
-    shift
-    set -- "$@"
+# --- Parse other args ---
+
+# --- Robust argument parsing ---
+while (( $# > 0 )); do
+    case "$1" in
+        --restore-backup)
+            RESTORE_BACKUP=true
+            ;;
+        --generate-readme)
+            GENERATE_README=true
+            ;;
+    esac
     shift
 done
 
@@ -43,8 +48,12 @@ restore_backup() {
         return 1
     fi
     print_status "Restoring backup from $latest_backup..."
-    cp -r "$latest_backup"/* "$HOME"/
-    print_success "Backup restored."
+    if cp -r "$latest_backup"/* "$HOME"/; then
+        print_success "Backup restored."
+    else
+        print_error "Failed to restore backup from $latest_backup."
+        return 1
+    fi
 }
 
 # --- README.md generator ---
@@ -111,20 +120,29 @@ create_symlink() {
         # Target is a regular file or directory, so back it up
         print_warning "Existing config found at $target_path. Backing it up."
         mkdir -p "$backup_dir"
-        mv "$target_path" "$backup_dir/"
-        print_success "Backed up '$target_path' to '$backup_dir/'"
+        if mv "$target_path" "$backup_dir/"; then
+            print_success "Backed up '$target_path' to '$backup_dir/'"
+        else
+            print_error "Failed to back up '$target_path' to '$backup_dir/'"
+            return 1
+        fi
     fi
 
     # Create the new symlink
-    ln -s "$source_path" "$target_path"
-    print_success "Linked $source_path -> $target_path"
+    if ln -s "$source_path" "$target_path"; then
+        print_success "Linked $source_path -> $target_path"
+    else
+        print_error "Failed to create symlink: $source_path -> $target_path"
+        return 1
+    fi
 }
 
 setup_symlinks() {
     print_status "Setting up core configuration symlinks..."
 
-    create_symlink "$DOTFILES_DIR/zsh/.zshrc" "$HOME/.zshrc"
-    create_symlink "$DOTFILES_DIR/zsh/.p10k.zsh" "$HOME/.p10k.zsh"
+    create_symlink "$DOTFILES_DIR/xdg/.config/zsh/.zshrc" "$HOME/.zshrc"
+    create_symlink "$DOTFILES_DIR/xdg/.config/zsh/.p10k.zsh" "$HOME/.p10k.zsh"
+    create_symlink "$DOTFILES_DIR/zsh/.zshenv" "$HOME/.zshenv"
     create_symlink "$DOTFILES_DIR/git/.gitignore" "$HOME/.gitignore_global"
     # VS Code settings (optional)
     # create_symlink "$DOTFILES_DIR/vscode/settings.json" "$HOME/Library/Application Support/Code/User/settings.json"
@@ -153,8 +171,11 @@ setup_symlinks() {
     # --- Set up local config file ---
     if [ ! -f "$HOME/.zshrc.local" ]; then
         print_status "Creating local Zsh config from template..."
-        cp "$DOTFILES_DIR/zsh/.zshrc.local.example" "$HOME/.zshrc.local"
-        print_success "Created ~/.zshrc.local. Please edit it to match your machine-specific settings."
+        if cp "$DOTFILES_DIR/zsh/.zshrc.local.example" "$HOME/.zshrc.local"; then
+            print_success "Created ~/.zshrc.local. Please edit it to match your machine-specific settings."
+        else
+            print_error "Failed to create ~/.zshrc.local from template."
+        fi
     else
         print_success "Local Zsh config already exists at ~/.zshrc.local. Skipping creation."
     fi
@@ -176,7 +197,7 @@ setup_git_hooks() {
     # Make custom scripts executable
     print_status "Making custom scripts executable..."
     chmod +x "$DOTFILES_DIR/scripts/hello.sh"
-    chmod +x "$DOTFILES_DIR/scripts/backup_dotfiles.sh"
+    chmod +x "$DOTFILES_DIR/scripts/backup-dotfiles.sh"
     print_success "Custom scripts are executable."
 }
 
@@ -228,11 +249,19 @@ configure_macos() {
 #                         MAIN EXECUTION
 # ================================================================= #
 main() {
+
+    # Check for dry-run mode as early as possible
+    if [[ "$DRY_RUN" == true ]]; then
+        print_status "Running in dry-run mode. No changes will be made."
+        print_status "Dry-run: install_homebrew, install_useful_tools, install_oh_my_zsh, install_powerlevel10k, install_zsh_plugins, setup_symlinks, configure_git, setup_shell, configure_macos would be run."
+        exit 0
+    fi
+
     # Check OS compatibility first
     if [[ "$(uname)" != "Darwin" && "$(uname)" != "Linux" ]]; then
         print_error "This script is designed for macOS and Linux only."
         exit 1
-    }
+    fi
 
     check_requirements
 
@@ -243,7 +272,7 @@ main() {
     if [[ "$GENERATE_README" == true ]]; then
         generate_readme
         exit 0
-    }
+    fi
 
     echo -e "
     ${BLUE}╔══════════════════════════════════════════════════════╗
@@ -267,11 +296,6 @@ main() {
 
     print_status "Starting dotfiles installation..."
     print_status "Dotfiles source directory: $DOTFILES_DIR"
-
-    if [[ "$DRY_RUN" == true ]]; then
-        print_status "Dry-run: install_homebrew, install_useful_tools, install_oh_my_zsh, install_powerlevel10k, install_zsh_plugins, setup_symlinks, configure_git, setup_shell, configure_macos would be run."
-        exit 0
-    }
 
     install_homebrew || exit 1 # Exit if Homebrew fails
     install_useful_tools

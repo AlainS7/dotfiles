@@ -7,7 +7,8 @@ This repository contains my personal dotfiles for macOS and Linux. The setup is 
 * **Automated Installation:** The `install.sh` script automates the entire setup process.
 * **Cross-Platform Compatibility:** The dotfiles are designed to work on both macOS and Linux.
 * **Homebrew-based:** Homebrew is used to manage packages, ensuring consistency across platforms.
-* **Modular Zsh Configuration:** The Zsh configuration is broken down into smaller, more manageable files for aliases, functions, and environment variables.
+* **XDG Base Directory Specification Compliant:** All Zsh-related configurations are now located in `xdg/.config/zsh`, adhering to the XDG standard for a cleaner home directory.
+* **Streamlined Zsh Configuration:** The main `.zshrc` is minimal, focusing on sourcing essential files, with detailed configurations moved to XDG-compliant directories.
 * **Powerlevel10k and Oh My Zsh:** The dotfiles include a pre-configured Powerlevel10k theme and Oh My Zsh for a powerful and visually appealing shell experience.
 * **Global .gitignore:** A global `.gitignore` file is included to prevent common unnecessary files from being committed to any repository.
 * **macOS Defaults:** The installation script includes a number of macOS-specific configurations to improve the user experience.
@@ -33,7 +34,37 @@ The script will back up any existing dotfiles to a `~/.dotfiles-backup` director
 
 ## Customization
 
+* **Main Zsh Configuration:** The primary Zsh configuration is now in `xdg/.config/zsh/.zshrc`.
+* **Environment Variables:** Essential environment variables are set in `zsh/.zshenv`.
 * **Aliases:** To add or modify aliases, edit the files in the `xdg/.config/zsh/aliases` directory.
 * **Functions:** To add or modify functions, edit the files in the `xdg/.config/zsh/functions` directory.
-* **Environment Variables:** To add or modify environment variables, edit the files in the `xdg/.config/zsh/environment` directory.
+
+## Usage Examples for Custom Functions
+
+### mkcd
+
+Create a directory and change into it:
+
+```sh
+mkcd my_new_folder
+```
+
+### explain
+
+Explain a command output or text using Gemini:
+
+```sh
+ls -l | explain
+explain "What does this error mean?"
+```
+
+### extract
+
+Extract any supported archive:
+
+```sh
+extract archive.tar.gz
+extract file.zip
+```
+
 * **Homebrew Packages:** To add or remove Homebrew packages, edit the `install.sh` script.
