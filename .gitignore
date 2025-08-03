@@ -127,6 +127,7 @@ dist/
 xdg/.config/zsh/.zcompdump*
 xdg/.config/zsh/.zsh_sessions/
 xdg/.config/zsh/_expiration_check_timestamp
+testfile.txt
 
 # -----------------------------------------------------------------
 # MACOS SPECIFIC
@@ -156,3 +157,4 @@ $RECYCLE.BIN/
 # ALLOW SPECIFIC FILES (Override above rules)
 # -----------------------------------------------------------------
 # Allow example/template files
+
