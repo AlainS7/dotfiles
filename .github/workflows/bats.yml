@@ -33,5 +33,7 @@ jobs:
           ln -sf "$DOTFILES_DIR/xdg/.config/zsh/.p10k.zsh" "$HOME/.p10k.zsh"
           ln -sf "$DOTFILES_DIR/zsh/.zshenv" "$HOME/.zshenv"
           echo "DOTFILES_DIR=$DOTFILES_DIR" >> $GITHUB_ENV
+      - name: Install gemini CLI
+        run: npm install -g @google/gemini-cli
       - name: Run Bats tests
         run: bats tests/
