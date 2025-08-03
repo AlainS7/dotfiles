@@ -1,6 +1,11 @@
+
 # --------------------------------------------------------------------
 # >> ENVIRONMENT VARIABLES & SHELL OPTIONS
 # --------------------------------------------------------------------
+
+# Ensure critical variables are set first for CI and tests
+export EDITOR="code --wait"
+export PATH="$DOTFILES_DIR/scripts:$PATH"
 
 
 # =================== ENVIRONMENT VARIABLES ===================
