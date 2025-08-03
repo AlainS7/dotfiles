@@ -33,7 +33,7 @@ hello.sh
 Hello from your custom scripts directory!
 ```
 
-### `backup_dotfiles.sh`
+### `backup-dotfiles.sh`
 
 This script automates the process of backing up your dotfiles repository to its remote origin. It's designed to be run periodically to keep your dotfiles synchronized and version-controlled.
 
@@ -46,7 +46,7 @@ This script automates the process of backing up your dotfiles repository to its 
 **Usage:**
 
 ```sh
-backup_dotfiles.sh
+backup-dotfiles.sh
 ```
 
 **Important Notes:**

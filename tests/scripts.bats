@@ -15,9 +15,9 @@ setup() {
   [ "$output" = "Hello from the custom scripts directory!" ]
 }
 
-@test "backup_dotfiles.sh is executable" {
-  # Check that backup_dotfiles.sh is executable
-  [ -x "$DOTFILES_DIR/scripts/backup_dotfiles.sh" ]
+@test "backup-dotfiles.sh is executable" {
+  # Check that backup-dotfiles.sh is executable
+  [ -x "$DOTFILES_DIR/scripts/backup-dotfiles.sh" ]
 }
 
 @test "all scripts in scripts/ are executable" {
