@@ -1,1 +1,160 @@
-git/.gitignore
+# =================================================================
+# DOTFILES .GITIGNORE
+# =================================================================
+
+# -----------------------------------------------------------------
+# DOTFILES-SPECIFIC ISSUES (Critical fixes)
+# -----------------------------------------------------------------
+# Ignore problematic config files and circular symlinks
+xdg/.config/.config
+xdg/.config/procps
+xdg/.config/vscode-dev-containers
+
+# -----------------------------------------------------------------
+# SENSITIVE FILES (Never commit these!)
+# -----------------------------------------------------------------
+# Environment files with secrets
+.env
+.env.*
+!.env.example
+
+# SSH keys and certificates
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+known_hosts*
+
+# GPG keys
+*.gpg
+*.asc
+secring.*
+
+# API keys and tokens
+**/secrets/
+**/*secret*
+**/*credential*
+**/*password*
+**/*token*
+**/*apikey*
+
+# Cloud provider credentials
+.aws/credentials
+.gcp/credentials.json
+.azure/credentials
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# -----------------------------------------------------------------
+# TEMPORARY & CACHE FILES
+# -----------------------------------------------------------------
+# General temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Shell history files (may contain sensitive commands)
+.bash_history
+.zsh_history
+.fish_history
+.python_history
+.node_repl_history
+
+# Cache directories
+.cache/
+**/.cache/
+node_modules/
+.npm/
+.yarn/
+
+# Log files
+*.log
+logs/
+
+# -----------------------------------------------------------------
+# PERSONAL/LOCAL CONFIGURATIONS
+# -----------------------------------------------------------------
+# Local machine-specific configs
+**/local/
+**/*.local
+**/*-local.*
+
+# Personal notes and todo files
+TODO.md
+NOTES.md
+.notes/
+
+# Local config files
+*.local
+
+# Backup files
+*.bak
+*.backup
+*.orig
+
+# -----------------------------------------------------------------
+# DEVELOPMENT & BUILD FILES
+# -----------------------------------------------------------------
+# IDE/Editor files
+.vscode/settings.json
+.vscode/
+*.code-workspace
+.idea/
+*.sublime-*
+
+# Compiled files
+*.o
+*.so
+*.dylib
+*.dll
+
+# Build output directories
+build/
+dist/
+
+# filepath: .gitignore
+# Zsh cache and session files
+xdg/.config/zsh/.zcompdump*
+xdg/.config/zsh/.zsh_sessions/
+xdg/.config/zsh/_expiration_check_timestamp
+testfile.txt
+debug_output.txt
+
+# -----------------------------------------------------------------
+# MACOS SPECIFIC
+# -----------------------------------------------------------------
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+
+# -----------------------------------------------------------------
+# LINUX SPECIFIC
+# -----------------------------------------------------------------
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+
+# -----------------------------------------------------------------
+# WINDOWS SPECIFIC
+# -----------------------------------------------------------------
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# -----------------------------------------------------------------
+# ALLOW SPECIFIC FILES (Override above rules)
+# -----------------------------------------------------------------
+# Allow example/template files
