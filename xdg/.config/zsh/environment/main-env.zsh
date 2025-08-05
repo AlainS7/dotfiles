@@ -18,6 +18,7 @@ export VISUAL="$EDITOR"
 export PAGER="less"
 # Set language/locale for consistent UTF-8 support
 export LANG="en_US.UTF-8"
+export LC_ALL="en_US.UTF-8"
 # Add custom bin directories to PATH
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$DOTFILES_DIR/scripts:$PATH"
