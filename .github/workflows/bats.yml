@@ -1,4 +1,6 @@
 name: Bats Tests
+permissions:
+  contents: read
 
 on:
   push:
