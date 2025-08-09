@@ -1,3 +1,4 @@
+unsetopt KSH_GLOB
 # ~/.zshenv
 #
 # This file is sourced on every shell startup, including non-interactive shells.

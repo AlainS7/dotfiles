@@ -19,6 +19,7 @@ Your dotfiles are designed to provide a robust, portable, and efficient developm
 ├── docs/                 # This documentation
 ├── git/                  # Git configurations and hooks
 ├── lib/                  # Helper scripts for installation
+│   └── Brewfile          # Homebrew packages
 ├── scripts/              # Your custom shell scripts
 ├── tests/                # Bats-Core tests for your scripts
 ├── xdg/                  # XDG Base Directory Specification compliant configs
@@ -50,7 +51,7 @@ cd dotfiles
 This script will:
 
 * Install Homebrew (if not present).
-* Install essential command-line tools (fzf, bat, eza, etc.) via Homebrew.
+* Install all dependencies from the `lib/Brewfile` using `brew bundle`.
 * Install Oh My Zsh and Powerlevel10k.
 * Install Zsh plugins (autosuggestions, syntax-highlighting).
 * Set up symbolic links for your configuration files.

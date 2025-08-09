@@ -4,14 +4,12 @@
 # Ensures that important symlinks exist and point to the correct files in the repo
 
 setup() {
+  # Load the test helper
+  load 'test_helper'
   # Set DOTFILES_DIR to the root of the dotfiles repo for use in tests
   export DOTFILES_DIR="$(cd "$BATS_TEST_DIRNAME/.." && pwd)"
-}
-
-@test ".zshrc symlink exists and points to repo file" {
-  # Check that ~/.zshrc is a symlink to the repo's .zshrc
-  [ -L "$HOME/.zshrc" ]
-  [ "$(readlink "$HOME/.zshrc")" = "$DOTFILES_DIR/xdg/.config/zsh/.zshrc" ]
+  # Create symlinks for the tests
+  setup_symlinks_for_tests
 }
 
 @test ".p10k.zsh symlink exists and points to repo file" {

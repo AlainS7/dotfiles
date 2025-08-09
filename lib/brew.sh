@@ -31,28 +31,30 @@ install_homebrew() {
     fi
 }
 
-install_useful_tools() {
-    print_status "Installing command-line tools via Homebrew..."
-    local tools=("fzf" "bat" "eza" "tree" "git" "curl" "wget" "jq")
-    # "1password-cli" "bats-core"  not installed
-    for tool in "${tools[@]}"; do
-        if ! command -v "$tool" &>/dev/null; then
-            print_status "Installing $tool..."
-            brew install "$tool"
+install_packages_from_brewfile() {
+    print_status "Installing packages from Brewfile..."
+    if ! command -v brew &>/dev/null; then
+        print_error "Homebrew is not installed. Cannot proceed with package installation."
+        return 1
+    fi
 
-            # Special post-install for fzf
-            if [ "$tool" = "fzf" ]; then
-                print_status "Running fzf post-installation script..."
-                # Use `yes` to auto-confirm prompts from the fzf install script
-                if [ -f "$(brew --prefix)/opt/fzf/install" ]; then
-                    yes | "$(brew --prefix)/opt/fzf/install" --all
-                    print_success "fzf keybindings and completion installed."
-                else
-                    print_warning "fzf post-install script not found. You may need to run it manually."
-                fi
-            fi
-        else
-            print_success "$tool is already installed."
-        fi
-    done
+    local brewfile_path="$DOTFILES_DIR/lib/Brewfile"
+    if [ ! -f "$brewfile_path" ]; then
+        print_error "Brewfile not found at $brewfile_path"
+        return 1
+    fi
+
+    if brew bundle --file="$brewfile_path"; then
+        print_success "All packages from Brewfile are installed."
+    else
+        print_error "Failed to install packages from Brewfile."
+        return 1
+    fi
+
+    # Special post-install for fzf
+    if [ -f "$(brew --prefix)/opt/fzf/install" ]; then
+        print_status "Running fzf post-installation script..."
+        yes | "$(brew --prefix)/opt/fzf/install" --all
+        print_success "fzf keybindings and completion installed."
+    fi
 }

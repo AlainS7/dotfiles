@@ -67,4 +67,4 @@ extract archive.tar.gz
 extract file.zip
 ```
 
-* **Homebrew Packages:** To add or remove Homebrew packages, edit the `install.sh` script.
+* **Homebrew Packages:** To add or remove Homebrew packages, edit the `lib/Brewfile` and re-run the `install.sh` script.

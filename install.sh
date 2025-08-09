@@ -144,7 +144,6 @@ create_symlink() {
 setup_symlinks() {
     print_status "Setting up core configuration symlinks..."
 
-    create_symlink "$DOTFILES_DIR/xdg/.config/zsh/.zshrc" "$HOME/.zshrc"
     create_symlink "$DOTFILES_DIR/xdg/.config/zsh/.p10k.zsh" "$HOME/.p10k.zsh"
     create_symlink "$DOTFILES_DIR/zsh/.zshenv" "$HOME/.zshenv"
     create_symlink "$DOTFILES_DIR/git/.gitignore" "$HOME/.gitignore_global"
@@ -257,7 +256,7 @@ main() {
     # Check for dry-run mode as early as possible
     if [[ "$DRY_RUN" == true ]]; then
         print_status "Running in dry-run mode. No changes will be made."
-        print_status "Dry-run: install_homebrew, install_useful_tools, install_oh_my_zsh, install_powerlevel10k, install_zsh_plugins, setup_symlinks, configure_git, setup_shell, configure_macos would be run."
+        print_status "Dry-run: install_homebrew, install_packages_from_brewfile, install_oh_my_zsh, install_powerlevel10k, install_zsh_plugins, setup_symlinks, configure_git, setup_shell, configure_macos would be run."
         exit 0
     fi
 
@@ -302,7 +301,7 @@ main() {
     print_status "Dotfiles source directory: $DOTFILES_DIR"
 
     install_homebrew || exit 1 # Exit if Homebrew fails
-    install_useful_tools
+    install_packages_from_brewfile
     install_oh_my_zsh
     install_powerlevel10k
     install_zsh_plugins

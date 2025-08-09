@@ -4,8 +4,12 @@
 # Tests mkcd and extract functions for expected behavior
 
 setup() {
+  # Load the test helper
+  load 'test_helper'
   # Set DOTFILES_DIR to the root of the dotfiles repo for use in tests
   export DOTFILES_DIR="$(cd "$BATS_TEST_DIRNAME/.." && pwd)"
+  # Create symlinks for the tests
+  setup_symlinks_for_tests
 }
 
 @test "mkcd function creates directory and changes into it" {

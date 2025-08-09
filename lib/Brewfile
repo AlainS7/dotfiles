@@ -1,0 +1,40 @@
+# Brewfile for dotfiles
+
+# Core dependencies
+tap "homebrew/bundle"
+tap "romkatv/powerlevel10k"
+
+# Shell
+brew "zsh"
+brew "bash"
+brew "powerlevel10k"
+brew "zsh-syntax-highlighting"
+brew "zsh-autosuggestions"
+
+# Development tools
+brew "neovim"
+brew "git"
+brew "gh"
+brew "go"
+brew "node"
+brew "python"
+brew "nvm"
+brew "terraform"
+brew "awscli"
+
+# Command-line utilities
+brew "fzf"
+brew "bat"
+brew "eza"
+brew "stow"
+brew "jq"
+brew "wget"
+brew "tree"
+brew "telnet"
+brew "htop"
+
+# Security
+brew "1password-cli"
+
+# Testing
+brew "bats-core"
