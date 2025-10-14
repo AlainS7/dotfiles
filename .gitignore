@@ -17,6 +17,7 @@ xdg/.config/vscode-dev-containers
 .env
 .env.*
 !.env.example
+.env.local
 
 # SSH keys and certificates
 *.pem

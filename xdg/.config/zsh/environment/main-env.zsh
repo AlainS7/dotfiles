@@ -22,6 +22,15 @@ export LC_ALL="en_US.UTF-8"
 # Add custom bin directories to PATH
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$DOTFILES_DIR/scripts:$PATH"
+# Add TeX Live to PATH for LaTeX support
+export PATH="/Library/TeX/texbin:$PATH"
+
+# Android SDK setup
+export ANDROID_HOME="$HOME/Library/Android/sdk"
+export PATH="$PATH:$ANDROID_HOME/emulator"
+export PATH="$PATH:$ANDROID_HOME/tools"
+export PATH="$PATH:$ANDROID_HOME/tools/bin"
+export PATH="$PATH:$ANDROID_HOME/platform-tools"
 # Add Homebrew to PATH if not already present (redundant with .zshenv, but safe)
 if [ -f "/opt/homebrew/bin/brew" ]; then
   eval "$(/opt/homebrew/bin/brew shellenv)"
@@ -29,6 +38,16 @@ elif [ -f "/usr/local/bin/brew" ]; then
   eval "$(/usr/local/bin/brew shellenv)"
 elif [ -f "/home/linuxbrew/.linuxbrew/bin/brew" ]; then
   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
+
+
+# --- Local .env loader (optional) ---
+# If a local env file exists at repo root, source it to populate secrets like LITELLM_API_KEY.
+# Uses `set -a` to export vars defined within. Safe no-op if file not present.
+if [ -n "$DOTFILES_DIR" ] && [ -f "$DOTFILES_DIR/.env.local" ]; then
+  set -a
+  . "$DOTFILES_DIR/.env.local"
+  set +a
 fi
 
 
@@ -67,9 +86,40 @@ load_1password_secrets() {
 
     # Add more secrets here as needed.
     : # No-op if no secrets are uncommented
+    # Configure the 1Password reference for LiteLLM in your shell profile or .zshenv, e.g.:
+    # export OP_LITELLM_SECRET_PATH='op://My Vault/LiteLLM/API Key'
+    local litellm_ref="${OP_LITELLM_SECRET_PATH:-}"
+
+    # If neither var is set, attempt to read from 1Password
+    if [ -z "${LITELLM_API_KEY:-}" ] && [ -z "${LITELLM_TOKEN:-}" ] && [ -n "$litellm_ref" ]; then
+      local _litellm
+      _litellm=$(op read --no-newline "$litellm_ref" 2>/dev/null)
+      if [ -n "$_litellm" ]; then
+        export LITELLM_API_KEY="$_litellm"
+        export LITELLM_TOKEN="$_litellm"
+        # echo "Loaded LiteLLM credentials from 1Password." >&2
+      fi
+    fi
+    # Keep both env vars in sync if only one is present
+    if [ -z "${LITELLM_API_KEY:-}" ] && [ -n "${LITELLM_TOKEN:-}" ]; then
+      export LITELLM_API_KEY="$LITELLM_TOKEN"
+    elif [ -z "${LITELLM_TOKEN:-}" ] && [ -n "${LITELLM_API_KEY:-}" ]; then
+      export LITELLM_TOKEN="$LITELLM_API_KEY"
+    fi
   else
     echo "1Password CLI (op) not found. Skipping secret loading." >&2
   fi
 }
 
 # load_1password_secrets
+# Invoke the secret loader (safe no-op if not configured or 'op' not installed)
+load_1password_secrets
+
+# --- LiteLLM Configuration ---
+# After attempting to load from 1Password, ensure variables are consistent.
+# If only one of LITELLM_API_KEY / LITELLM_TOKEN is set, mirror it to the other.
+if [ -z "${LITELLM_API_KEY:-}" ] && [ -n "${LITELLM_TOKEN:-}" ]; then
+  export LITELLM_API_KEY="$LITELLM_TOKEN"
+elif [ -z "${LITELLM_TOKEN:-}" ] && [ -n "${LITELLM_API_KEY:-}" ]; then
+  export LITELLM_TOKEN="$LITELLM_API_KEY"
+fi

@@ -35,3 +35,4 @@ alias gmi-restore='echo "Type /restore [tool_call_id] in Gemini CLI to undo tool
 # Advanced usage examples
 alias gmi-checkpointing='gemini --checkpointing'
 alias gmi-verbose='gemini --verbose'
+alias gmi-install='npm install -g @google/gemini-cli'

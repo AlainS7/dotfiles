@@ -30,6 +30,7 @@ export ZDOTDIR="$DOTFILES_DIR/xdg/.config/zsh"
 # Set the path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
+export OP_LITELLM_SECRET_PATH='op://My Vault/LiteLLM/LITELLM_TOKEN'
 
 # Add Homebrew to the PATH.
 # This ensures that `brew` and its installed packages are available.
