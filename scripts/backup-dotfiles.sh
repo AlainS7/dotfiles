@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 # This script automates backing up dotfiles to a remote Git repository.
 

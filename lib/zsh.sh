@@ -1,4 +1,5 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
+set -euo pipefail
 
 source "$(dirname "${BASH_SOURCE[0]:-${(%):-%x}}")/utils.sh"
 
