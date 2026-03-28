@@ -202,6 +202,7 @@ setup_git_hooks() {
     print_status "Making custom scripts executable..."
     chmod +x "$DOTFILES_DIR/scripts/hello.sh"
     chmod +x "$DOTFILES_DIR/scripts/backup-dotfiles.sh"
+    chmod +x "$DOTFILES_DIR/scripts/uninstall.sh"
     print_success "Custom scripts are executable."
 }
 

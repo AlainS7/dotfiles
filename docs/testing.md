@@ -30,12 +30,12 @@ Bats-Core tests are written as shell scripts with a special syntax. Each test fi
 
 ### Key Bats-Core Commands and Variables
 
-* `@test "description" { ... }`: Defines a new test case.
-* `run <command> [args...]`: Executes a command or function within the test environment. It captures `stdout`, `stderr`, and the `exit status`.
-* `$status`: The exit status of the last `run` command.
-* `$output`: The standard output of the last `run` command.
-* `$stderr`: The standard error of the last `run` command.
-* `[ <expression> ]`: Standard Bash conditional expressions for assertions.
+- `@test "description" { ... }`: Defines a new test case.
+- `run <command> [args...]`: Executes a command or function within the test environment. It captures `stdout`, `stderr`, and the `exit status`.
+- `$status`: The exit status of the last `run` command.
+- `$output`: The standard output of the last `run` command.
+- `$stderr`: The standard error of the last `run` command.
+- `[ <expression> ]`: Standard Bash conditional expressions for assertions.
 
 ### Sourcing Files in Tests
 
@@ -62,9 +62,9 @@ Navigate to the root of your dotfiles repository and run the `bats` command, spe
 
 ```sh
 bats tests/             # Run all tests in the 'tests' directory
-bats tests/example.bats # Run a specific test file
+bats tests/aliases.bats # Run a specific test file
 ```
 
 ## Example Test
 
-See `tests/example.bats` for a practical example of testing a custom script and a Zsh function.
+See the test files in `tests/` for practical examples of testing custom scripts and Zsh functions.

@@ -4,17 +4,21 @@ This repository contains my personal dotfiles for macOS and Linux. The setup is 
 
 ## Features
 
-* **Automated Installation:** The `install.sh` script automates the entire setup process.
-* **Cross-Platform Compatibility:** The dotfiles are designed to work on both macOS and Linux.
-* **Homebrew-based:** Homebrew is used to manage packages, ensuring consistency across platforms.
-* **XDG Base Directory Specification Compliant:** All Zsh-related configurations are now located in `xdg/.config/zsh`, adhering to the XDG standard for a cleaner home directory.
-* **Streamlined Zsh Configuration:** The main `.zshrc` is minimal, focusing on sourcing essential files, with detailed configurations moved to XDG-compliant directories.
-* **Powerlevel10k and Oh My Zsh:** The dotfiles include a pre-configured Powerlevel10k theme and Oh My Zsh for a powerful and visually appealing shell experience.
-* **Global .gitignore:** A global `.gitignore` file is included to prevent common unnecessary files from being committed to any repository.
-* **macOS Defaults:** The installation script includes a number of macOS-specific configurations to improve the user experience.
-* **Custom Scripts:** Easily add and manage your own shell scripts.
-* **Secrets Management:** Securely handle sensitive information using 1Password CLI.
-* **Automated Testing:** Ensure your configurations work as expected with Bats-Core.
+- **Automated Installation:** The `install.sh` script automates the entire setup process.
+- **Cross-Platform Compatibility:** The dotfiles are designed to work on both macOS and Linux.
+- **Homebrew-based:** Homebrew is used to manage packages, ensuring consistency across platforms.
+- **XDG Base Directory Specification Compliant:** All Zsh-related configurations are now located in `xdg/.config/zsh`, adhering to the XDG standard for a cleaner home directory.
+- **Streamlined Zsh Configuration:** The main `.zshrc` is minimal, focusing on sourcing essential files, with detailed configurations moved to XDG-compliant directories.
+- **Powerlevel10k and Oh My Zsh:** The dotfiles include a pre-configured Powerlevel10k theme and Oh My Zsh for a powerful and visually appealing shell experience.
+- **Global .gitignore:** A global `.gitignore` file (`git/.gitignore`) is included to prevent common unnecessary files from being committed to any repository.
+- **Active Secret Scanner:** A pre-commit/pre-push Git hook (`git/hook-reminder.sh`) actively scans staged changes for API keys, tokens, passwords, and private keys — blocking the commit if secrets are detected.
+- **Gemini CLI Aliases:** A suite of aliases and functions for the Gemini CLI (`xdg/.config/zsh/aliases/gemini/`), including clipboard, save-to-file, and logging helpers.
+- **macOS Defaults:** The installation script includes a number of macOS-specific configurations to improve the user experience.
+- **Custom Scripts:** Easily add and manage your own shell scripts.
+- **Secrets Management:** Securely handle sensitive information using 1Password CLI.
+- **Automated Testing:** Ensure your configurations work as expected with Bats-Core.
+- **CI Pipeline:** GitHub Actions workflow runs ShellCheck linting and Bats tests on every push and PR.
+- **Makefile:** Convenient `make install`, `make test`, `make lint`, `make backup`, `make uninstall` targets.
 
 ## Documentation
 
@@ -32,12 +36,31 @@ cd dotfiles
 
 The script will back up any existing dotfiles to a `~/.dotfiles-backup` directory before creating symlinks.
 
+### Additional Install Options
+
+```sh
+./install.sh --dry-run          # Preview changes without making them
+./install.sh --restore-backup   # Restore the most recent backup
+./install.sh --generate-readme  # Regenerate README.md
+```
+
+### Using Make
+
+```sh
+make install    # Run full installation
+make test       # Run all Bats tests
+make lint       # Run ShellCheck on all scripts
+make backup     # Backup dotfiles to remote repo
+make uninstall  # Remove symlinks (with optional backup restore)
+make help       # Show all available targets
+```
+
 ## Customization
 
-* **Main Zsh Configuration:** The primary Zsh configuration is now in `xdg/.config/zsh/.zshrc`.
-* **Environment Variables:** Essential environment variables are set in `zsh/.zshenv`.
-* **Aliases:** To add or modify aliases, edit the files in the `xdg/.config/zsh/aliases` directory.
-* **Functions:** To add or modify functions, edit the files in the `xdg/.config/zsh/functions` directory.
+- **Main Zsh Configuration:** The primary Zsh configuration is now in `xdg/.config/zsh/.zshrc`.
+- **Environment Variables:** Essential environment variables are set in `zsh/.zshenv`.
+- **Aliases:** To add or modify aliases, edit the files in the `xdg/.config/zsh/aliases` directory.
+- **Functions:** To add or modify functions, edit the files in the `xdg/.config/zsh/functions` directory.
 
 ## Usage Examples for Custom Functions
 
@@ -67,4 +90,4 @@ extract archive.tar.gz
 extract file.zip
 ```
 
-* **Homebrew Packages:** To add or remove Homebrew packages, edit the `install.sh` script.
+- **Homebrew Packages:** To add or remove Homebrew packages, edit the `install.sh` script.

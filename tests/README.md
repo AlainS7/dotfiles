@@ -22,7 +22,7 @@ bats tests/
 ## Adding More Tests
 
 - Add new `.bats` files in the `tests/` directory for new features or scripts.
-- Follow the examples in `simple.bats` for structure and style.
+- Follow the examples in `aliases.bats` and `functions.bats` for structure and style.
 
 ## Continuous Integration (CI)
 
