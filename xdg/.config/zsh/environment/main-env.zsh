@@ -3,11 +3,6 @@
 # >> ENVIRONMENT VARIABLES & SHELL OPTIONS
 # --------------------------------------------------------------------
 
-# Ensure critical variables are set first for CI and tests
-export EDITOR="code --wait"
-export PATH="$DOTFILES_DIR/scripts:$PATH"
-
-
 # =================== ENVIRONMENT VARIABLES ===================
 # Set the default text editor for command-line programs (e.g., git commit)
 # Use "code --wait" for VS Code, or "vim", "nano", etc.
@@ -19,26 +14,19 @@ export PAGER="less"
 # Set language/locale for consistent UTF-8 support
 export LANG="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
-# Add custom bin directories to PATH
-export PATH="$HOME/.local/bin:$PATH"
-export PATH="$DOTFILES_DIR/scripts:$PATH"
+# Add custom bin directories to PATH (deduplicated)
+[[ ":$PATH:" != *":$HOME/.local/bin:"* ]] && export PATH="$HOME/.local/bin:$PATH"
+[[ -n "$DOTFILES_DIR" && ":$PATH:" != *":$DOTFILES_DIR/scripts:"* ]] && export PATH="$DOTFILES_DIR/scripts:$PATH"
 # Add TeX Live to PATH for LaTeX support
-export PATH="/Library/TeX/texbin:$PATH"
+[[ ":$PATH:" != *":/Library/TeX/texbin:"* ]] && export PATH="/Library/TeX/texbin:$PATH"
 
 # Android SDK setup
 export ANDROID_HOME="$HOME/Library/Android/sdk"
-export PATH="$PATH:$ANDROID_HOME/emulator"
-export PATH="$PATH:$ANDROID_HOME/tools"
-export PATH="$PATH:$ANDROID_HOME/tools/bin"
-export PATH="$PATH:$ANDROID_HOME/platform-tools"
-# Add Homebrew to PATH if not already present (redundant with .zshenv, but safe)
-if [ -f "/opt/homebrew/bin/brew" ]; then
-  eval "$(/opt/homebrew/bin/brew shellenv)"
-elif [ -f "/usr/local/bin/brew" ]; then
-  eval "$(/usr/local/bin/brew shellenv)"
-elif [ -f "/home/linuxbrew/.linuxbrew/bin/brew" ]; then
-  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-fi
+[[ ":$PATH:" != *":$ANDROID_HOME/emulator:"* ]] && export PATH="$ANDROID_HOME/emulator:$PATH"
+[[ ":$PATH:" != *":$ANDROID_HOME/tools:"* ]] && export PATH="$ANDROID_HOME/tools:$PATH"
+[[ ":$PATH:" != *":$ANDROID_HOME/tools/bin:"* ]] && export PATH="$ANDROID_HOME/tools/bin:$PATH"
+[[ ":$PATH:" != *":$ANDROID_HOME/platform-tools:"* ]] && export PATH="$ANDROID_HOME/platform-tools:$PATH"
+# NOTE: Homebrew PATH is set in zsh/.zshenv (earliest load point) — not duplicated here.
 
 
 # --- Local .env loader (optional) ---
@@ -114,12 +102,3 @@ load_1password_secrets() {
 # load_1password_secrets
 # Invoke the secret loader (safe no-op if not configured or 'op' not installed)
 load_1password_secrets
-
-# --- LiteLLM Configuration ---
-# After attempting to load from 1Password, ensure variables are consistent.
-# If only one of LITELLM_API_KEY / LITELLM_TOKEN is set, mirror it to the other.
-if [ -z "${LITELLM_API_KEY:-}" ] && [ -n "${LITELLM_TOKEN:-}" ]; then
-  export LITELLM_API_KEY="$LITELLM_TOKEN"
-elif [ -z "${LITELLM_TOKEN:-}" ] && [ -n "${LITELLM_API_KEY:-}" ]; then
-  export LITELLM_TOKEN="$LITELLM_API_KEY"
-fi
