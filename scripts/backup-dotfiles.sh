@@ -18,25 +18,33 @@ if [ ! -d ".git" ]; then
     exit 1
 fi
 
-print_status "Backing up dotfiles to remote Git repository..."
+# Detect the current branch instead of guessing
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+if [ -z "$BRANCH" ]; then
+    print_error "Could not determine current branch."
+    exit 1
+fi
 
-git add .
+print_status "Backing up dotfiles to remote Git repository (branch: $BRANCH)..."
+
+# Stage only tracked files + new files explicitly, not blindly everything
+git add -u
 
 # Check if there are any changes to commit
 if git diff --cached --exit-code --quiet; then
     print_success "No changes to commit. Dotfiles are already up to date."
 else
     COMMIT_MESSAGE="Automated dotfiles backup: $(date +'%Y-%m-%d %H:%M:%S')"
-    git commit -m "$COMMIT_MESSAGE"
-    if [ $? -eq 0 ]; then
+    if git commit -m "$COMMIT_MESSAGE"; then
         print_success "Changes committed locally."
-        git push origin main || git push origin master # Adjust branch name as needed
-        if [ $? -eq 0 ]; then
+        if git push origin "$BRANCH"; then
             print_success "Dotfiles pushed to remote repository."
         else
             print_error "Failed to push dotfiles to remote repository. Please check your Git configuration and network connection."
+            exit 1
         fi
     else
         print_error "Failed to commit changes locally."
+        exit 1
     fi
 fi
