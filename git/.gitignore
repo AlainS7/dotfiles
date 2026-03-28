@@ -1,0 +1,85 @@
+# =============================================================================
+#   GLOBAL GITIGNORE
+# =============================================================================
+# This file is symlinked to ~/.gitignore_global by install.sh.
+# It prevents common unwanted files from being committed to any repository.
+
+# --- OS Generated Files ---
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# --- Editor & IDE Files ---
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.code-workspace
+.project
+.classpath
+.settings/
+
+# --- Environment & Secrets ---
+.env
+.env.*
+!.env.example
+!.env.test
+.env.local
+
+# --- SSH Keys & Certificates ---
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+*.keystore
+credentials.json
+service_account.json
+
+# --- Language & Build Artifacts ---
+node_modules/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+*.o
+*.a
+*.so
+*.dylib
+
+# --- Package Manager ---
+*.gem
+*.lock
+!Gemfile.lock
+!package-lock.json
+!yarn.lock
+
+# --- Terraform ---
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+
+# --- Logs ---
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# --- Misc ---
+.cache/
+.tmp/
+*.bak
+*.orig
