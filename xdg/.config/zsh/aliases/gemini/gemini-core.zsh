@@ -34,7 +34,7 @@ alias gmi-mcp='echo "Type /mcp in Gemini CLI to list Model Context Protocol serv
 # Shell integration
 alias gmi-shell='echo "Type ! in Gemini CLI to toggle shell mode, or !command to run once"'
 
-# Output management
-alias gmi-clip='gemini "$@" | pbcopy && echo "[Gemini output copied to clipboard]"'
-alias gmi-save='gemini "$@" > gemini_output_$(date +%Y%m%d_%H%M%S).txt && echo "[Output saved with timestamp]"'
-alias gmi-log='mkdir -p ~/gemini_logs && gemini "$@" | tee ~/gemini_logs/session_$(date +%Y%m%d_%H%M%S).log'
+# Output management (functions, not aliases, so $@ works)
+gmi-clip() { gemini "$@" | pbcopy && echo "[Gemini output copied to clipboard]"; }
+gmi-save() { gemini "$@" > "gemini_output_$(date +%Y%m%d_%H%M%S).txt" && echo "[Output saved with timestamp]"; }
+gmi-log() { mkdir -p ~/gemini_logs && gemini "$@" | tee ~/gemini_logs/"session_$(date +%Y%m%d_%H%M%S).log"; }

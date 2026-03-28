@@ -5,8 +5,8 @@
 # -- Shell & Config Management --
 alias reload="source ~/.zshrc"          # Reload your zsh config
 alias zshconfig="code ~/.zshrc"         # Open zsh config in VS Code
-alias aliases="code "$DOTFILES_DIR/xdg/.config/zsh/aliases/general.zsh""
-alias functions="code "$DOTFILES_DIR/xdg/.config/zsh/functions/main_functions.zsh""
+alias aliases='code "$DOTFILES_DIR/xdg/.config/zsh/aliases/general-aliases.zsh"'
+alias functions='code "$DOTFILES_DIR/xdg/.config/zsh/functions/main-functions.zsh"'
 alias p10kconfig="p10k configure"       # Re-run Powerlevel10k wizard
 
 
@@ -52,6 +52,8 @@ alias nrd="npm run dev"
 alias dc="docker-compose"
 alias dcu="docker-compose up -d"
 alias dcd="docker-compose down"
+alias pi="pnpm install"
+alias prd="pnpm run dev"
 
 # -- Safety Aliases --
 alias rm="rm -i"
@@ -67,19 +69,32 @@ alias df="df -h"
 
 # -- Process Management --
 alias psgall="ps aux" # List all processes
-alias psguser="ps aux | grep -v grep | grep -u" # List processes for a specific user (e.g., psguser username)
+psguser() { ps -u "${1:-$USER}" ; }    # List processes for a specific user (e.g., psguser username)
 alias psg="ps aux | grep -v grep | grep -i" # Find process by name (e.g., psg chrome)
-alias killport="fuser -k -n tcp" # Kill process on a port (e.g., killport 3000)
+if [[ "$OSTYPE" == darwin* ]]; then
+  alias killport='lsof -ti tcp:$1 | xargs kill -9' # Kill process on a port (macOS)
+else
+  alias killport="fuser -k -n tcp" # Kill process on a port (Linux)
+fi
 
 # -- Directory Navigation --
 alias desk="cd ~/Desktop"
 alias dl="cd ~/Downloads"
 alias docs="cd ~/Documents"
-alias dev="cd ~/Developer"
+alias dev="cd ~/Projects/Developer"
 
-# -- Clipboard Management (macOS) --
-# Linux: xclip or xsel instead.
-# Windows: clip.exe or powershell commands.
-alias copyfile="pbcopy <" # Copy file content to clipboard (e.g., copyfile file.txt)
-alias copy="pbcopy" # Pipe output to copy to clipboard (e.g., cat file.txt | copy)
-alias paste="pbpaste" # Paste content from clipboard
+# -- Clipboard Management --
+# Automatically uses pbcopy/pbpaste on macOS or xclip on Linux.
+if [[ "$OSTYPE" == darwin* ]]; then
+  alias copyfile="pbcopy <"   # Copy file content to clipboard (e.g., copyfile file.txt)
+  alias copy="pbcopy"         # Pipe output to clipboard (e.g., cat file.txt | copy)
+  alias paste="pbpaste"       # Paste content from clipboard
+elif command -v xclip &>/dev/null; then
+  alias copyfile="xclip -selection clipboard <"
+  alias copy="xclip -selection clipboard"
+  alias paste="xclip -selection clipboard -o"
+elif command -v xsel &>/dev/null; then
+  alias copyfile="xsel --clipboard --input <"
+  alias copy="xsel --clipboard --input"
+  alias paste="xsel --clipboard --output"
+fi
