@@ -94,8 +94,8 @@ load_1password_secrets() {
     elif [ -z "${LITELLM_TOKEN:-}" ] && [ -n "${LITELLM_API_KEY:-}" ]; then
       export LITELLM_TOKEN="$LITELLM_API_KEY"
     fi
-  else
-    echo "1Password CLI (op) not found. Skipping secret loading." >&2
+  # else
+  #   echo "1Password CLI (op) not found. Skipping secret loading." >&2
   fi
 }
 
