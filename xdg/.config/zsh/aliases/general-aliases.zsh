@@ -52,7 +52,7 @@ alias nrd="npm run dev"
 alias dc="docker-compose"
 alias dcu="docker-compose up -d"
 alias dcd="docker-compose down"
-alias pi="pnpm install"
+alias pin="pnpm install"
 alias prd="pnpm run dev"
 
 # -- Safety Aliases --
