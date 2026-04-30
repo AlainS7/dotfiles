@@ -81,11 +81,12 @@ plugins=(
     git
     zsh-autosuggestions
     zsh-syntax-highlighting
-    z
     sudo
     fzf
     extract
 )
+
+eval "$(zoxide init zsh)"
 
 # Source Oh My Zsh.
 if [ -n "$ZSH" ]; then
