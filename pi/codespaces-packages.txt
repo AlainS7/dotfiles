@@ -6,3 +6,12 @@
 # Examples (uncomment after you pick packages):
 # npm:@some-scope/pi-tools
 # git:github.com/user/repo@v1.0.0
+npm:@plannotator/pi-extension
+npm:@callumvass/forgeflow-pm
+npm:@callumvass/forgeflow-dev   # current pi skills handle this
+npm:pi-lens
+npm:pi-subagents                # contrary to pi design
+npm:taskplane                   # testing taskplane, but competitor to pi-subagents
+pi-total-recall                 # includes pi-memory
+npm:pi-markdown-preview
+npm:context-mode                # MCP
