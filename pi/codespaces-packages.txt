@@ -1,0 +1,8 @@
+# One argument to `pi install` per line (see https://pi.dev/docs/latest/packages ).
+# Blank lines and # comments are ignored.
+# Submodule-backed packages under ~/.pi/extensions/<name>/ are installed automatically
+# after `git submodule update` — no `pi add`; use this file only for extra npm:/git: specs.
+#
+# Examples (uncomment after you pick packages):
+# npm:@some-scope/pi-tools
+# git:github.com/user/repo@v1.0.0
