@@ -366,6 +366,11 @@ install_pi_packages_from_dotpi_extension_dirs() {
     done
 }
 
+# Trim, strip CR, full-line # comments, and inline " … # comment" (pi install spec must not include trailing # text).
+normalize_pi_install_line() {
+    print -r -- "$1" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' -e 's/\r$//' -e 's/[[:space:]]*#.*$//' | sed -e 's/[[:space:]]*$//'
+}
+
 # Install pi CLI + optional pi packages for every GitHub Codespace (personal dotfiles, not per-repo).
 # Set PI_SKIP=1 to disable. Add specs to pi/codespaces-packages.txt (one per line, see https://pi.dev/docs/latest/packages ).
 setup_pi_for_codespaces() {
@@ -411,7 +416,7 @@ setup_pi_for_codespaces() {
     if [[ -f "$pkg_file" ]]; then
         local line spec
         while IFS= read -r line || [[ -n "$line" ]]; do
-            spec="$(print -r -- "$line" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' -e 's/\r$//')"
+            spec="$(normalize_pi_install_line "$line")"
             [[ -z "$spec" ]] && continue
             [[ "$spec" == \#* ]] && continue
             print_status "Codespaces: pi install $spec"
