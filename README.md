@@ -19,6 +19,7 @@ This repository contains my personal dotfiles for macOS and Linux. The setup is 
 - **Automated Testing:** Ensure your configurations work as expected with Bats-Core.
 - **CI Pipeline:** GitHub Actions workflow runs ShellCheck linting and Bats tests on every push and PR.
 - **Makefile:** Convenient `make install`, `make test`, `make lint`, `make backup`, `make uninstall` targets.
+- **dotpi in Codespaces:** In [GitHub Codespaces](https://github.com/features/codespaces) by default, `install.sh` clones [AlainS7/dotpi](https://github.com/AlainS7/dotpi) into `~/.pi`. Env checks are not spoof-proof; see [docs: dotpi](./docs/README.md#dotpi-companion-repository-codespaces).
 
 ## Documentation
 
