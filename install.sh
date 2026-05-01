@@ -225,6 +225,22 @@ configure_git() {
             git config --global user.email "$GIT_COMMITTER_EMAIL"
             print_success "Set git user.email from GIT_COMMITTER_EMAIL (Codespaces)."
         fi
+        # Some images omit GIT_COMMITTER_EMAIL. Prefer id+login@users.noreply (matches github.com/settings/emails); else login-only noreply.
+        if [[ -z "$(git config --global user.email)" ]] && [[ -n "${GITHUB_USER:-}" ]]; then
+            local gid glogin
+            if command -v gh &>/dev/null && gh auth status &>/dev/null; then
+                gid="$(gh api user --jq .id 2>/dev/null)"
+                glogin="$(gh api user --jq .login 2>/dev/null)"
+                if [[ -n "$gid" && -n "$glogin" ]]; then
+                    git config --global user.email "${gid}+${glogin}@users.noreply.github.com"
+                    print_success "Set git user.email from gh api (id+noreply, Codespaces)."
+                fi
+            fi
+            if [[ -z "$(git config --global user.email)" ]]; then
+                git config --global user.email "${GITHUB_USER}@users.noreply.github.com"
+                print_success "Set git user.email to ${GITHUB_USER}@users.noreply.github.com (Codespaces fallback)."
+            fi
+        fi
     fi
 
     # Only prompt if still unset and stdin is a TTY (zsh: never use bash read -p; -p is coprocess in zsh).
