@@ -305,6 +305,12 @@ setup_dotpi_for_codespaces() {
         return
     fi
 
+    if [[ -d "$dotpi_dir" ]]; then
+        print_warning "$dotpi_dir exists but has no .git (not a clone). git clone refuses non-empty dirs."
+        print_warning "Fix: rm -rf \"$dotpi_dir\" then re-run install, or clone manually: git clone --recurse-submodules \"$dotpi_url\" \"$dotpi_dir\""
+        return
+    fi
+
     print_status "Codespaces: cloning dotpi to $dotpi_dir..."
     if [[ "${DOTPI_SHALLOW_CLONE:-}" == "1" ]]; then
         if git clone --depth 1 "$dotpi_url" "$dotpi_dir"; then
@@ -387,6 +393,33 @@ normalize_pi_install_line() {
     print -r -- "$1" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' -e 's/\r$//' -e 's/[[:space:]]*#.*$//' | sed -e 's/[[:space:]]*$//'
 }
 
+# pi treats bare names as filesystem paths; ensure npm:/git:/absolute paths (stale manifest may omit npm:).
+ensure_pi_install_spec_scheme() {
+    local s="$1"
+    [[ -z "$s" ]] && { print -r ""; return }
+    if [[ "$s" == npm:* || "$s" == git:* ]]; then
+        print -r -- "$s"
+        return
+    fi
+    if [[ "$s" == /* || "$s" == ./* ]]; then
+        print -r -- "$s"
+        return
+    fi
+    if [[ "$s" == git@* ]]; then
+        print -r -- "$s"
+        return
+    fi
+    if [[ "$s" == @* ]]; then
+        print -r -- "npm:$s"
+        return
+    fi
+    if [[ "$s" != *:* ]]; then
+        print -r -- "npm:$s"
+        return
+    fi
+    print -r -- "$s"
+}
+
 # Install pi CLI + optional pi packages for every GitHub Codespace (personal dotfiles, not per-repo).
 # Set PI_SKIP=1 to disable. Add specs to pi/codespaces-packages.txt (one per line, see https://pi.dev/docs/latest/packages ).
 setup_pi_for_codespaces() {
@@ -435,6 +468,7 @@ setup_pi_for_codespaces() {
             spec="$(normalize_pi_install_line "$line")"
             [[ -z "$spec" ]] && continue
             [[ "$spec" == \#* ]] && continue
+            spec="$(ensure_pi_install_spec_scheme "$spec")"
             print_status "Codespaces: pi install $spec"
             pi install "$spec" || print_warning "pi install failed: $spec"
         done <"$pkg_file"
