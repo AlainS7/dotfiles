@@ -34,11 +34,14 @@ install_homebrew() {
 
 install_useful_tools() {
     print_status "Installing command-line tools via Homebrew..."
-    local tools=("fzf" "bat" "eza" "tree" "git" "curl" "wget" "jq" "1password-cli" "bats-core")
+    local tools=("zoxide" "fzf" "bat" "eza" "tree" "git" "curl" "wget" "jq" "1password-cli" "bats-core")
     for tool in "${tools[@]}"; do
         if ! command -v "$tool" &>/dev/null; then
             print_status "Installing $tool..."
-            brew install "$tool"
+            if ! brew install "$tool"; then
+                print_warning "brew install $tool failed (skipping; set -e would otherwise abort remaining tools)."
+                continue
+            fi
 
             # Special post-install for fzf
             if [ "$tool" = "fzf" ]; then
