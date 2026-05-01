@@ -231,6 +231,36 @@ configure_git() {
     print_success "Git user info configured."
 }
 
+# Clone dotpi into ~/.pi only in GitHub Codespaces: CODESPACES=true and CODESPACE_NAME set (per GH docs), never on macOS.
+# Override: DOTPI_DIR (default ~/.pi), DOTPI_REPO_URL. Set DOTPI_SKIP=1 to disable.
+setup_dotpi_for_codespaces() {
+    if [[ -n "${DOTPI_SKIP:-}" ]]; then
+        return
+    fi
+    if [[ "$(uname)" == "Darwin" ]]; then
+        return
+    fi
+    # GitHub sets both in real codespaces only (see docs: default env vars).
+    if [[ "${CODESPACES:-}" != "true" ]] || [[ -z "${CODESPACE_NAME:-}" ]]; then
+        return
+    fi
+
+    local dotpi_dir="${DOTPI_DIR:-$HOME/.pi}"
+    local dotpi_url="${DOTPI_REPO_URL:-https://github.com/AlainS7/dotpi.git}"
+
+    if [[ -d "$dotpi_dir/.git" ]]; then
+        print_success ".pi repo already present at $dotpi_dir"
+        return
+    fi
+
+    print_status "Codespaces: cloning dotpi to $dotpi_dir..."
+    if git clone --depth 1 "$dotpi_url" "$dotpi_dir"; then
+        print_success ".pi cloned to $dotpi_dir"
+    else
+        print_warning ".pi clone failed. If the repo is private, ensure Git credential helper is configured in this codespace (e.g. gh auth setup-git)."
+    fi
+}
+
 configure_macos() {
     if [[ "$(uname)" != "Darwin" ]]; then
         return # Silently skip if not on macOS
@@ -312,10 +342,11 @@ main() {
     setup_git_hooks
     configure_git
     setup_shell
+    setup_dotpi_for_codespaces
     configure_macos
 
     echo
-    print_success "✨ Dotfiles installation process finished! ✨"
+    print_success "Dotfiles installation process finished!"
     echo
     print_status "--- NEXT STEPS ---"
     echo "  1. Restart your terminal (or log out/in) for all changes to take effect."
