@@ -215,7 +215,19 @@ configure_git() {
     git config --global core.excludesfile "$HOME/.gitignore_global"
     print_success "Set global gitignore to ~/.gitignore_global"
 
-    # Only prompt for user info if running in an interactive terminal (zsh: never use bash's read -p; -p is coprocess in zsh).
+    # Codespaces: set identity before prompts so interactive terminals do not ask (GITHUB_* set by GitHub).
+    if is_github_codespaces; then
+        if [[ -z "$(git config --global user.name)" ]] && [[ -n "${GITHUB_USER:-}" ]]; then
+            git config --global user.name "$GITHUB_USER"
+            print_success "Set git user.name from GITHUB_USER (Codespaces)."
+        fi
+        if [[ -z "$(git config --global user.email)" ]] && [[ -n "${GIT_COMMITTER_EMAIL:-}" ]]; then
+            git config --global user.email "$GIT_COMMITTER_EMAIL"
+            print_success "Set git user.email from GIT_COMMITTER_EMAIL (Codespaces)."
+        fi
+    fi
+
+    # Only prompt if still unset and stdin is a TTY (zsh: never use bash read -p; -p is coprocess in zsh).
     if [[ -t 0 ]]; then
         if [[ -z "$(git config --global user.name)" ]]; then
             printf '%s ' "Enter your Git username:"
@@ -230,16 +242,6 @@ configure_git() {
         fi
     else
         print_warning "Running in non-interactive mode. Skipping interactive Git user prompts."
-        if is_github_codespaces 2>/dev/null; then
-            if [[ -z "$(git config --global user.name)" ]] && [[ -n "${GITHUB_USER:-}" ]]; then
-                git config --global user.name "$GITHUB_USER"
-                print_success "Set git user.name from GITHUB_USER."
-            fi
-            if [[ -z "$(git config --global user.email)" ]] && [[ -n "${GIT_COMMITTER_EMAIL:-}" ]]; then
-                git config --global user.email "$GIT_COMMITTER_EMAIL"
-                print_success "Set git user.email from GIT_COMMITTER_EMAIL."
-            fi
-        fi
         if [[ -z "$(git config --global user.name)" ]] || [[ -z "$(git config --global user.email)" ]]; then
             print_warning "Configure Git manually, for example:"
             print_warning "  git config --global user.name \"Your Name\""
