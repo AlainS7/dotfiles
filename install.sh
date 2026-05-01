@@ -438,7 +438,7 @@ main() {
     # Check for dry-run mode as early as possible
     if [[ "$DRY_RUN" == true ]]; then
         print_status "Running in dry-run mode. No changes will be made."
-        print_status "Dry-run: install_homebrew, install_useful_tools, install_oh_my_zsh, install_powerlevel10k, install_zsh_plugins, setup_symlinks, configure_git, setup_shell, setup_dotpi_for_codespaces, setup_pi_for_codespaces, configure_macos would be run."
+        print_status "Dry-run: setup_dotpi_for_codespaces, setup_pi_for_codespaces (Codespaces, before brew), install_homebrew, install_useful_tools, install_oh_my_zsh, install_powerlevel10k, install_zsh_plugins, setup_symlinks, configure_git, setup_shell, configure_macos would be run."
         exit 0
     fi
 
@@ -482,6 +482,10 @@ main() {
     print_status "Starting dotfiles installation..."
     print_status "Dotfiles source directory: $DOTFILES_DIR"
 
+    # Codespaces: dotpi + pi before Homebrew optional tools so a brew failure (e.g. 1password-cli on Linux) does not skip pi.
+    setup_dotpi_for_codespaces
+    setup_pi_for_codespaces
+
     install_homebrew || exit 1 # Exit if Homebrew fails
     install_useful_tools
     install_oh_my_zsh
@@ -492,8 +496,6 @@ main() {
     setup_git_hooks
     configure_git
     setup_shell
-    setup_dotpi_for_codespaces
-    setup_pi_for_codespaces
     configure_macos
 
     echo
