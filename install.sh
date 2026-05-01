@@ -246,7 +246,7 @@ setup_dotpi_for_codespaces() {
     fi
 
     local dotpi_dir="${DOTPI_DIR:-$HOME/.pi}"
-    local dotpi_url="${DOTPI_REPO_URL:-https://github.com/AlainS7/dotpi.git}"
+    local dotpi_url="${DOTPI_REPO_URL:-https://github.com/AlainS7/dotpi-remote.git}"
 
     if [[ -d "$dotpi_dir/.git" ]]; then
         print_success ".pi repo already present at $dotpi_dir"

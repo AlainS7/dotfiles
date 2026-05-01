@@ -58,13 +58,13 @@ This script will:
 * Configure Git global settings.
 * Apply macOS-specific defaults (if on macOS).
 * Create a `~/.zshrc.local` file from the template for machine-specific settings.
-* In **GitHub Codespaces**, clone the separate [dotpi](https://github.com/AlainS7/dotpi) repo into `~/.pi` (see [Dotpi companion repository](#dotpi-companion-repository-codespaces)).
+* In **GitHub Codespaces**, clone the separate [dotpi](https://github.com/AlainS7/dotpi-remote) repo into `~/.pi` (see [Dotpi companion repository](#dotpi-companion-repository-codespaces)).
 
 After installation, restart your terminal or log out and back in for all changes to take effect.
 
 ## Dotpi companion repository (Codespaces)
 
-The [dotpi](https://github.com/AlainS7/dotpi) repository is not part of this dotfiles repo. During `install.sh`, a post-setup step (`setup_dotpi_for_codespaces`) may clone it.
+The [dotpi](https://github.com/AlainS7/dotpi-remote) repository is not part of this dotfiles repo. During `install.sh`, a post-setup step (`setup_dotpi_for_codespaces`) may clone it.
 
 ### When it runs
 
@@ -89,7 +89,7 @@ The main installer still **exits on Windows** (macOS/Linux only), so this path n
 | Variable | Default | Purpose |
 | --- | --- | --- |
 | `DOTPI_DIR` | `$HOME/.pi` | Directory to clone into |
-| `DOTPI_REPO_URL` | `https://github.com/AlainS7/dotpi.git` | Git remote URL |
+| `DOTPI_REPO_URL` | `https://github.com/AlainS7/dotpi-remote.git` | Git remote URL |
 | `DOTPI_SKIP` | *(unset)* | If set to any value, skip cloning |
 
 If `$DOTPI_DIR/.git` already exists, the step is skipped (idempotent).
