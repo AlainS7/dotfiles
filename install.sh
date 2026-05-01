@@ -359,6 +359,18 @@ dotpi_child_looks_like_pi_package() {
     [[ -f "$d/package.json" ]] || [[ -d "$d/extensions" ]] || [[ -d "$d/skills" ]] || [[ -d "$d/prompts" ]] || [[ -d "$d/themes" ]]
 }
 
+# npm install then semver-safe npm audit fix (never --force — that can apply breaking upgrades). May edit package-lock.json.
+dotpi_npm_install_and_audit_fix() {
+    local dir="$1" label="$2"
+    print_status "Codespaces: npm install in $label..."
+    if ! (cd "$dir" && npm install); then
+        print_warning "npm install failed in $label (continuing)."
+        return 0
+    fi
+    print_status "Codespaces: npm audit fix in $label..."
+    (cd "$dir" && npm audit fix) || print_warning "npm audit fix could not clear everything in $label — run: cd $dir && npm audit (avoid --force unless you accept breakage)."
+}
+
 # npm install only: agent extensions ship TypeScript and package.json deps under ~/.pi/agent/extensions (pi does not bundle node_modules).
 dotpi_npm_install_agent_extensions() {
     local root="$HOME/.pi/agent/extensions"
@@ -369,8 +381,7 @@ dotpi_npm_install_agent_extensions() {
         [[ "$(basename "$sub")" == .* ]] && continue
         [[ -f "$sub/package.json" ]] || continue
         apath="$(builtin cd -q "$sub" && pwd)"
-        print_status "Codespaces: npm install (agent extension) in $apath..."
-        (cd "$sub" && npm install) || print_warning "npm install failed in $apath (continuing)."
+        dotpi_npm_install_and_audit_fix "$sub" "agent extension $apath"
     done
 }
 
@@ -397,8 +408,7 @@ install_pi_packages_from_dotpi_extension_dirs() {
         fi
         apath="$(builtin cd -q "$sub" && pwd)"
         if [[ -f "$sub/package.json" ]]; then
-            print_status "Codespaces: npm install in $apath..."
-            (cd "$sub" && npm install) || print_warning "npm install failed in $apath (continuing)."
+            dotpi_npm_install_and_audit_fix "$sub" "$apath"
         fi
         print_status "Codespaces: pi install $apath"
         pi install "$apath" || print_warning "pi install failed: $apath"
