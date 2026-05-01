@@ -359,6 +359,21 @@ dotpi_child_looks_like_pi_package() {
     [[ -f "$d/package.json" ]] || [[ -d "$d/extensions" ]] || [[ -d "$d/skills" ]] || [[ -d "$d/prompts" ]] || [[ -d "$d/themes" ]]
 }
 
+# npm install only: agent extensions ship TypeScript and package.json deps under ~/.pi/agent/extensions (pi does not bundle node_modules).
+dotpi_npm_install_agent_extensions() {
+    local root="$HOME/.pi/agent/extensions"
+    [[ -d "$root" ]] || return 0
+    local sub apath
+    for sub in "$root"/*(N/); do
+        [[ -d "$sub" ]] || continue
+        [[ "$(basename "$sub")" == .* ]] && continue
+        [[ -f "$sub/package.json" ]] || continue
+        apath="$(builtin cd -q "$sub" && pwd)"
+        print_status "Codespaces: npm install (agent extension) in $apath..."
+        (cd "$sub" && npm install) || print_warning "npm install failed in $apath (continuing)."
+    done
+}
+
 # After dotpi + submodules: pi install each immediate child of DOTPI_EXTENSION_ROOT (default ~/.pi/extensions).
 # No separate "pi add"; local packages register via "pi install /abs/path" per pi.dev. Set PI_SKIP_DOTPI_EXTENSIONS=1 to skip.
 install_pi_packages_from_dotpi_extension_dirs() {
@@ -366,6 +381,8 @@ install_pi_packages_from_dotpi_extension_dirs() {
     if [[ -n "${PI_SKIP_DOTPI_EXTENSIONS:-}" ]]; then
         return
     fi
+    dotpi_npm_install_agent_extensions
+
     local root="${DOTPI_EXTENSION_ROOT:-$HOME/.pi/extensions}"
     [[ -d "$root" ]] || return 0
 
