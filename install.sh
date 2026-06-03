@@ -330,6 +330,42 @@ setup_dotpi_for_codespaces() {
     dotpi_sync_submodules "$dotpi_dir"
 }
 
+# Homebrew on Linux/macOS is not always on PATH in non-login shells; installer only appended shellenv on *fresh* brew install.
+# If brew already existed (e.g. Codespaces), ensure ~/.zprofile runs eval "$(…brew shellenv)" once. See https://docs.brew.sh/Homebrew-on-Linux
+ensure_brew_shellenv_in_zprofile() {
+    local brew_path marker
+    marker='# dotfiles: homebrew shellenv'
+    brew_path=""
+    if command -v brew &>/dev/null; then
+        brew_path="$(command -v brew)"
+    elif [[ -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
+        brew_path=/home/linuxbrew/.linuxbrew/bin/brew
+    elif [[ -x /opt/homebrew/bin/brew ]]; then
+        brew_path=/opt/homebrew/bin/brew
+    elif [[ -x /usr/local/bin/brew ]]; then
+        brew_path=/usr/local/bin/brew
+    fi
+    [[ -z "$brew_path" ]] && return 0
+
+    if [[ -f "$HOME/.zprofile" ]] && grep -qF 'brew shellenv' "$HOME/.zprofile" 2>/dev/null; then
+        eval "$("$brew_path" shellenv)" 2>/dev/null || true
+        return 0
+    fi
+    if [[ -f "$HOME/.zprofile" ]] && grep -qF "$marker" "$HOME/.zprofile" 2>/dev/null; then
+        eval "$("$brew_path" shellenv)" 2>/dev/null || true
+        return 0
+    fi
+    mkdir -p "$(dirname "$HOME/.zprofile")"
+    print_status "Appending Homebrew shellenv to ~/.zprofile (brew on PATH for login shells)."
+    {
+        echo ""
+        echo "$marker"
+        echo "eval \"\$($brew_path shellenv)\""
+    } >>"$HOME/.zprofile"
+    eval "$("$brew_path" shellenv)" 2>/dev/null || true
+    print_success "Homebrew shellenv recorded in ~/.zprofile."
+}
+
 # Append npm global bin to PATH in ~/.zprofile once (pi lives there after npm install -g).
 ensure_npm_global_on_path() {
     command -v npm &>/dev/null || return 0
@@ -536,7 +572,7 @@ main() {
     # Check for dry-run mode as early as possible
     if [[ "$DRY_RUN" == true ]]; then
         print_status "Running in dry-run mode. No changes will be made."
-        print_status "Dry-run: setup_dotpi_for_codespaces, setup_pi_for_codespaces (Codespaces, before brew), install_homebrew, install_useful_tools, install_oh_my_zsh, install_powerlevel10k, install_zsh_plugins, setup_symlinks, configure_git, setup_shell, configure_macos would be run."
+        print_status "Dry-run: setup_dotpi_for_codespaces, setup_pi_for_codespaces (Codespaces, before brew), install_homebrew, ensure_brew_shellenv_in_zprofile, install_useful_tools, install_oh_my_zsh, install_powerlevel10k, install_zsh_plugins, setup_symlinks, configure_git, setup_shell, configure_macos would be run."
         exit 0
     fi
 
@@ -585,6 +621,7 @@ main() {
     setup_pi_for_codespaces
 
     install_homebrew || exit 1 # Exit if Homebrew fails
+    ensure_brew_shellenv_in_zprofile
     install_useful_tools
     install_oh_my_zsh
     install_powerlevel10k
